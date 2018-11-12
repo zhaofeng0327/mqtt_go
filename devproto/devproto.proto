@@ -1,0 +1,727 @@
+syntax = "proto2";
+package msginfo;
+//1.2.模板
+//消息模版
+message CMsg
+{
+required CMsHead msgHead = 1; //消息头
+optional CMsgBodyDeviceStatus deviceStatusBody = 2;//柜机状态消息体
+optional CMsgBodyDeviceOpen openDeviceBody = 3;//开柜指令消息体
+optional CMsgBodyDeviceAck openDeviceAckBody = 4;//电源取走或归还响应消息体
+optional CMsgBodyWifiSetupInfo wifiSetupInfoBody = 5;//柜机wifi设置成功推送消息到服务器
+optional CMsgBodyWifiSetupAck  wifiSetupAckBody = 6; //柜机wifi在服务器端处理后返回消息体
+optional CMsgBodyUpgrade upgrade =7;//柜机软件升级
+optional CMsgBodyInstallBatteryResult installBatteryResult=8;//安装电源结果，下一个卡槽
+optional CMsgBodyGetBatteryPassword getBatteryPasswordBody=9;//获取电源密码请求
+optional CMsgBodyGetBatteryPasswordAck getBatteryPasswordAckBody=10;//返回电源密码
+optional CMsgBodyUpgradeAck upgradeAck =11;//柜机软件升级响应
+optional CMsgBodyDeviceUpdate updateDeviceBody =12;//更新柜机参数
+optional CMsgBodyGsmSetupInfo gsmSetupInfoBody = 13;//柜机2G信息推送消息到服务器
+optional CMsgBodyGsmSetupAck gsmSetupAckBody =14; //柜机2G在服务器端处理后返回消息
+optional CMsgBodyGsmFlowInfo gsmFlowInfoBody =15; //柜机2G损耗流量上报到服务器
+optional CMsgBodyGsmFlowAck gsmFlowAckBody =16; //服务器返回收到流量的确认信息
+optional CMsgBodyBatteryBack backBatteryBody =17; //自动归还充电宝
+optional CMsgBodyWifiClearInfo clearwifiInfoBody = 18; //服务器推送清空wifi指令到柜机
+optional CMsgBodyWifiClearAck clearWifiAckBody = 19;//回复服务器是否成功清空wifi信息
+optional CMsgBodyDeviceOfflineStatus OfflineStatusBody = 20; //上报柜机离线状态原因(1.柜机上次重启的原因 或 2.柜机最近一次连不上服务器的原因)
+optional CMsgBodyDeviceOfflineAck OfflineAckBody = 21;	//服务器返回收到柜机离线原因的信息
+optional CMsgBodyDeviceRebootSys rebootSysBody=22;		 //柜机上报即将重启
+optional CMsgBodyDeviceRebootSysAck rebootSysAckBody=23; //服务器告知柜机，柜机此时会重启。
+optional CMsgBodySmartLinkAuthReq smartLinkAuthReq=26; // smart link授权请求.
+optional CMsgBodySmartLinkAuthAck smartLinkAuthAck=27; // smart link授权确认.
+optional CMsgBodySmartLinkResult smartLinkResult=28; // smart link's result of config
+optional CMsgBodySlotLock lockSlotBody=29; //锁定/解锁固定卡槽
+optional CMsgBodySlotLockAck lockSlotAckBody=30;//回复服务器是否锁定/解锁成功
+optional CMsgBodyTipsImages tipsImagesBody = 31; //提示图片，目前主要用于坞托屏
+optional CMsgBodyTipsImagesReport tipsImagesReportBody = 32;//提示图片状态上报
+optional CMsgBodyHttpDnsUpdate httpDnsUpdateBody = 33;//
+optional CMsgBodyHttpDnsUpdateAck httpDnsUpdateAckBody = 34;//
+optional CMsgBodyGetServerTimeReq getServerTimeReq = 41;//柜机请求获取服务器时间(UTC时间)。当柜机ntp获取时间失败，则从服务器获取时间来设置柜机本地时间。
+optional CMsgBodyGetServerTimeAck getServerTimeAck = 42;//服务器下发时间(UTC时间)
+optional CMsgBodyGetBattVersionReq getBattVersionReq = 43;//服务器请求获取柜机卡槽BATT板的版本
+optional CMsgBodyGetBattVersionAck getBattVersionAck = 44;//柜机回应服务器卡槽BATT板的版本
+optional CMsgBodyBattVersionAck  battVersionAckBody = 45;//服务器端接收并处理处理BATT板的版本后给柜机返回消息体
+optional CMsgBodyAdvScheduleList advScheduleListBody = 1001; //广告排期数据下发
+optional CMsgBodyAdvScheduleListReport advScheduleListAck = 1002; //广告排期柜机执行状态上报
+optional CMsgBodyAdvPlayCount advPlayCount = 1003; //广告播放统计数据上报
+optional CMsgBodyAdvPlayCountAck advPlayCountAck = 1004; //广告播放统计数据上报服务器回执
+optional CMsgBodyExtInfoRequest extInfoRequest = 1022; //柜机上报柜机通用数据
+}
+
+
+
+
+//消息头
+message CMsHead
+{
+required CMD cmd = 1;//指令信息
+optional string version = 2;//协议版本:q
+optional string tranid =3;//交易ID      36字节
+optional int32 groupid =4;//MQTT client分组编号
+optional int32  errcode = 5; //
+optional bool  heart_beat_flag = 6; //
+}
+//消息命令枚举
+enum CMD
+{
+STATUSREQ = 1; //状态同步请求（请求即时心跳）
+STATUSRES = 2;//状态同步响应（心跳）
+OPENDEV = 3;//打开设备（借还）
+OPENACK = 4;//设备响应（借还响应）
+
+SETUPWIFI = 5;//设置Wifi信息（设置WiFi）
+SETUPWIFIACK=6;//server 回复信息（设置WiFi响应）
+
+UPGRADE=7;//升级固件
+STARTINSTALLBATTERY=8;//开始安装电源
+STOPINSTALLBATTERY=9;//结束安装电源
+INSTALLBATTERYRESULT=10;//安装电源结果
+GETBATTERYPASSWORD =11;//获取电源密码请求
+GETBATTERYPASSWORDACK=12;//获取电源密码返回
+UPDATEDEVICEPARAMS=13;//更新柜机参数
+
+SETUPGSM = 14;//设置2G信息（设置2G）
+SETUPGSMACK=15;//server 回复信息（设置2G响应）
+
+UPLOADGSMFLOW= 16;//上报2g流量信息
+UPLOADGSMFLOWACK=17;//server 回复信息
+
+BACKBATTERY=18;//上报归还充电宝信息
+CLEARWIFIINFO=19;//清空柜机wifi信息
+CLEARWIFIACK=20; //柜机回复信息（清空柜机wifi信息响应）
+OFFLINESTATUS=21; //上报离线的原因
+OFFLINEACK=22;    //server 回复信息
+UPGRADEACK=23;//升级响应
+REBOOTSYS=24; //系统重启请求
+REBOOTSYSACK=25; //server 回复信息(系统重启)
+SMART_LINK_AUTH_REQ = 26; //smartlink授权请求
+SMART_LINK_AUTH_ACK = 27; //smartlink授权下发
+SMART_LINK_RESULT = 28; //smartlink's result of cmd
+LOCKSLOT=29;      //锁定或者解锁卡槽cmd
+LOCKSLOTACK=30;	 //柜机回复锁定或者解锁卡槽的 cmd
+
+TIPS_IMAGES=31;         //提示图片，目前主要用于坞托屏 cmd
+TIPS_IMAGES_REPORT=32;  //提示图片状态上报 cmdTIPS_IMAGES=31;         //提示图片，目前主要用于坞托屏 cmd
+HTTPDNS_UPDATE = 33;//
+HTTPDNS_UPDATEACK = 34;//
+GET_SERVER_TIME_REQ = 41;//柜机请求获取服务器时间(UTC时间)
+GET_SERVER_TIME_ACK = 42;//服务器下发时间(UTC时间)
+
+GET_BATT_VERSION_REQ = 43;//服务器请求获取柜机卡槽BATT板的版本
+GET_BATT_VERSION_ACK = 44;//柜机回应服务器卡槽BATT板的版本
+BATT_VERSION_ACK = 45;//服务器端接收并处理BATT板的版本后给柜机返回消息体
+
+//大柜机专用指令部份
+ADV_SCHEDULE_LIST = 1001;//下发广告排期数据
+ADV_SCHEDULE_LIST_REPORT = 1002;//广告排期数据状态上报
+ADV_PLAY_COUNT = 1003;//广告播放统计数据上报
+ADV_PLAY_COUNT_Ack = 1004;//广告播放统计数据上报服务器回执
+
+EXTINFO_REQUEST = 1022; //柜机上报柜机通用数据
+}
+//2.实体列表
+//2.1.卡槽
+enum HEART_BEAT_DEVICE_CODE
+{
+ HBD_STATUS_OK = 0;//正常成功
+ HBD_TEMPERATURE_ERROR = 1;//温度错误
+ HBD_WIFI_ERROR = 2;//WIFI错误
+ HBD_BLUE_ERROR = 3;//蓝牙错误
+ HBD_IBEACON_ERROR = 4;//ibeacon错误
+ HBD_CONFIG_FILE_ERROR = 5;//配置文件错误
+ HBD_SYSTEM_ERROR = 6;//系统错误
+ HBD_OTHER_ERROR = 7;//其他错误
+}
+enum HEART_BEAT_SLOT_CODE
+{
+ HBS_STATUS_OK = 0;//正常成功
+ HBS_REPAIR_OK  = 1;//温度错误
+ HBS_VOLTAGE_ERROR = 2;//电压错误
+ HBS_CURRENT_ERROR = 3;//电流错误
+ HBS_OTHER_ERROR = 4;//其他错误
+ HBS_MCU_ERROR = 5;//mcu错误，判定卡槽不可用
+ HBS_SN_N_CONTACT_Y_DOOR_Y_ERROR = 6;//sn为空，舱底压住，仓门压住
+ HBS_SN_N_CONTACT_Y_DOOR_N_ERROR = 7;//sn为空，舱底压住，仓门没有压住
+ HBS_SN_N_CONTACT_N_DOOR_Y_ERROR = 8;//sn为空，舱底没有压住，仓门压住
+ HBS_SN_N_CONTACT_N_DOOR_N_ERROR = 9;//sn为空，舱底没有压住，仓门没有压住
+ HBS_SN_Y_CONTACT_Y_DOOR_Y_ERROR = 10;//sn正常，舱底压住，仓门压住
+ HBS_SN_Y_CONTACT_Y_DOOR_N_ERROR = 11;//sn正常，舱底压住，仓门没有压住
+ HBS_SN_Y_CONTACT_N_DOOR_Y_ERROR = 12;//sn正常，舱底没有压住，仓门压住
+ HBS_SN_Y_CONTACT_N_DOOR_N_ERROR = 13;//sn正常，舱底没有压住，仓门没有压住
+ HBS_MOTOR_FUSE_ERROR = 16;//电机电源保险丝熔断错误
+ HBS_BATT_FUSE_ERROR = 17;//电池充电保险丝熔断错误
+ HBS_ELEC_FUSE_ERROR = 18;//电磁阀电源保险丝熔断错误
+ HBS_MOTOR_BATT_FUSE_ERROR = 19;//电机电源和电池充电保险丝熔断错误
+ HBS_MOTOR_ELEC_FUSE_ERROR = 20;//电机电源和电池阀电源保险丝熔断错误
+ HBS_BATT_ELEC_FUSE_ERROR = 21;//电池充电和电池阀电源保险丝熔断错误
+ HBS_MOTOR_BATT_ELEC_FUSE_ERROR = 22;//电机电源、电池充电和电池阀电源保险丝熔断错误
+}
+enum HEART_BEAT_BATTERY_CODE
+{
+ HBB_STATUS_OK = 0;//正常成功
+ HBB_OTHER_ERROR = 1;//其他错误
+ HBB_TEMPERATURE_ERROR = 2;//温度错误
+ HBB_VOLTAGE_ERROR = 3;//电压错误
+ HBB_CURRENT_ERROR = 4;//电流错误
+ HBB_CYCLECOUNT_ERROR = 5;//电流错误
+ HBB_INTERFACE_ERROR = 6;//电池接口类型错误
+ HBB_BODY_ERROR=7; //电池机身被拆开
+ HBB_LINE_ERROR=8; //电池充电线被破坏
+ HBB_BODY_AND_LINE_ERROR=9; //电池机身被拆开且充电线被破坏
+}
+
+enum ENABLE_BORROW_STATUS
+{
+ ENABLE_STATUS = 0;//可借状态（电池容量达到）
+ DISABLE_STATUS = 1;//不可借状态（电池容量没有达到）
+}
+message Slot
+{
+required int32 num = 1;               // 从1开始
+required HEART_BEAT_SLOT_CODE status= 2;                    //好坏状态   0为状态正常，>=1 状态异常(错误码)
+optional string batterysn =3 ;     //为空的时候就是空卡槽
+}
+//2.2.电源
+message Battery
+ {
+required string batterysn=1;  //电源sn
+required float  temprature = 2;  //电源温度
+required int32 voltage =3;   //电源电压
+required int32 fullChargeCapacity = 4; //电源最大容量（mAh)
+required int32 remainingCapacity = 5; //剩余容量（mAh)
+required int32 averageCurrent = 6;//充放电电流(mA)
+required int32 cycleCount = 7;   //循环次数
+required int32 bmsSafetyStatus =8;//异常状态，预留，BMS内部状态
+required int32 bmsFlags = 9;           //预留，BMS内部充满标志
+required HEART_BEAT_BATTERY_CODE status= 10;           //异常状态
+required ENABLE_BORROW_STATUS enableStatus = 11;           //可借标志(容量达到一定才能允许用户借）)
+}
+
+//2.3.柜机
+message Device
+{
+required string deviceid= 1;               // id
+optional float  armTemprature = 2;                   //ARM温度
+optional float  environmentTemprature = 3;                   //外部环境温度 
+optional string softwareVersion=4 ;     //软件版本
+optional string ipAddr=5 ;     //ip地址
+required HEART_BEAT_DEVICE_CODE status= 6;           //异常状态,各个部件的自检异常，运行异常
+}
+
+//广告屏
+message J182J_Device 
+{
+	required string deviceid= 1;               // 广告屏的设备id
+	optional string softwareVersion=2 ;     //软件版本
+}
+enum SLOTLOCKFLAG
+{
+       UNLOCK=1;
+       LOCK=2;
+       LOCK_AUTO=3;  //卡槽锁定，可以被自动解锁（电池取出后风险解除）。
+       LOCK_FUSE_OWN=5;//保险丝熔断后，自动锁
+}
+//message SlotLock
+//{
+//       required SLOTLOCKFLAG lockflag=1;
+//}
+//柜机动作类型枚举
+enum PROJECTTYPE
+{
+	Y153X = 1;	//Y1534/Y1533
+	Y1801=2;	//Y1801
+}
+message  Extended
+{
+	optional PROJECTTYPE type=1;
+	repeated SLOTLOCKFLAG lockstatus=2;
+	repeated int32 action_time=3;
+}
+//3.消息列表
+//3.1.心跳
+
+//柜机状态
+message CMsgBodyDeviceStatus
+{
+required Device device = 1;
+repeated Battery battery = 2; 
+repeated Slot slot = 3 ;
+optional Extended extended=4; //心跳信息扩展
+optional J182J_Device j182j_device = 5 ; //广告屏设备
+}
+
+//3.2.借还
+//柜机动作类型枚举
+enum DEVACTION
+{
+BORROW = 1;//借
+RETURN = 2;//还
+EJECT=3; // popup battery 
+}
+
+//柜机动作
+message CMsgBodyDeviceOpen
+{
+required DEVACTION action = 1;//动作指令
+required int32 num = 2;//卡槽编号   从零开始
+required string password = 3;//密码
+optional int32 action_time=4;//当前操作的时间戳
+}
+
+enum BATTERY_BORROW_RETURN_CODE
+{
+    BBR_STATUS_OK = 0;//正常成功
+    BBR_REQUEST_INVALID=1;//指令非法
+    BBR_REQUEST_REPEAT=2;//重复指令
+    BBR_REQUEST_NEED_WAIT=3;//当前有开柜指令正在执行
+    
+    BBR_SLOT_BLANK=4;//卡槽是空的
+    BBR_SLOT_NOT_BLANK=5;//卡槽不是空的
+    
+    BBR_SLOT_NOT_FETCH_BACK=6;//用户没有取,吞回
+    BBR_SLOT_NOT_FETCH_NOT_BACK=7;//借：用户没有取，没有吞回，卡槽进入卡死流程，业务端算成功
+
+   BBR_SLOT_NOT_PLUGIN=8;//还：用户未插入
+   BBR_SLOT_NOT_RECOGNIZE=9;//还：无法识别
+   BBR_SLOT_LOCK=10;		//卡槽被锁定
+   BBR_SLOT_FETCH=11;		//用户已取走
+
+    BBR_SYSTIME_NOT_SET=14;  //柜机本地时间未设置成功（ntpdate失败且mqtt获取时间失败，且gprs获取时间失败），不能执行业务（借/还）
+
+    //技术性错误，需要重启MCU。卡槽坏的，能明确的需要单独命名，否则直接设置为
+    //服务器记录连续发生两次，则自动锁死该卡槽
+    BBR_SLOT_FAIL=16;
+    BBR_SLOT_FAIL_MCU_ERROR_BMS=17;
+    BBR_SLOT_FAIL_MCU_ERROR_LED=18;
+    BBR_SLOT_FAIL_MCU_ERROR_MOTOR=19;
+    BBR_SLOT_FAIL_MCU_ERROR_SWITCH_DOOR=20;
+    BBR_SLOT_FAIL_MCU_ERROR_SWITCH_CONTACT=21;
+    BBR_SLOT_FAIL_MCU_ERROR_ELECT=22;
+    BBR_SLOT_FAIL_MCU_ERROR_MOBILE_POWER_OPEN=23;
+    BBR_SLOT_FAIL_MCU_ERROR_MOBILE_POWER_CLOSE=24;
+    BBR_SLOT_NOT_FETCH_TIMEOUT_BACK=27;
+    BBR_SLOT_PUSH_FAIL=28;
+};
+
+message CMsgBodyBatteryBack
+{
+required string deviceid = 1;//设备id
+required int32 num = 2;//卡槽编号
+required string batterysn= 3;//还的时候需要发送电源ID
+required BATTERY_BORROW_RETURN_CODE state=4;//电源取走或插入是否成功状态
+optional int32 action_time=5;//当前操作的时间戳
+}
+
+//电源取走或插入响应
+message CMsgBodyDeviceAck
+{
+required DEVACTION action = 1;//动作指令
+required string deviceid = 2;//设备id
+required int32 num = 3;//卡槽编号
+required string batterysn= 4;//还的时候需要发送电源ID
+required BATTERY_BORROW_RETURN_CODE state=5;//电源取走或插入是否成功状态
+optional int32 action_time=6;//当前操作的时间戳
+}
+//3.3.柜机升级
+enum UPGRADESTATUS
+ {
+ DOWNLOAD_OK= 0;      // 下载成功，准备升级           
+ DOWNLOAD_FAIL= 1;      // 下载失败
+ }
+//柜机升级软件
+message CMsgBodyUpgrade
+{
+required string version = 1;//软件版本号
+required string serverUrl = 2;//升级Url
+required string fileMd5sum = 3;//MD5(128-bit) checksums
+optional string force_time = 4;//格式hh(时):mm(分),
+optional int32 strategy = 5;// 是否需要强制升级，0：不强制升级，1：强制升级
+optional string trigger_time_min=6;  //升级起始时间
+optional string trigger_time_max=7;  //升级结束时间
+}
+//柜机升级响应
+message CMsgBodyUpgradeAck
+{
+required UPGRADESTATUS  upgradeStatus= 1;//升级状态
+optional string lastfail =2;//柜机升级失败的原因
+required string deviceid= 3;               // device id
+
+}
+//服务器发送更新参数命令
+message  CMsgBodyDeviceUpdate
+{
+required string cmd=1; //更新参数的命令（柜机直接执行该命令）
+}
+//3.4.安装WiFi
+// Wifi密码类型
+enum WIFIAUTHMODE
+ {
+    WIFIAUTHMODENONE = 0;      // 无密码                                                                                                                                                           
+    WIFIAUTHMODEWPA = 1;       // WPA 
+    WIFIAUTHMODEWPAPSK = 2;    // WPA-PSK
+    WIFIAUTHMODEWPA2 = 3;      // WPA2
+    WIFIAUTHMODEWPA2PSK = 4;   // WPA2-PSK
+    WIFIAUTHMODESHARED = 5;    // WEP对应的认证模式
+}
+// Wifi密码加密方式
+enum WIFIENCRYPT 
+{
+    WIFIENCRYPTNONE = 0; //none
+    WIFIENCRYPTAES  = 1;  //aes
+    WIFIENCRYPTTKIP = 2;     //tkip
+    WIFIENCRYPTWEP = 3;     //wep
+}
+//联网方式（0:WiFi, 1:蓝牙, 2: 2G, 3: 4G）
+enum CONNECTNETTYPE
+{
+CONNECTNETWIFI =0;    //wifi
+CONNECTNETBLUE =1;   //blue
+CONNECTNET2G =2;     //2g
+CONNECTNET3G =3;     //3g
+CONNECTNET4G =4;     //4g
+}
+enum CURRENTNETSTATE
+{
+CURRENTNETDISABLE =1;		//net disable
+CURRENTNETENABLE =2;		//net enable
+}
+//柜机设置wifi信息
+message CMsgBodyWifiSetupInfo
+{
+optional string ssid = 1;
+optional string password = 2;
+required CONNECTNETTYPE connectNetworkType = 3;//联网方式
+optional WIFIAUTHMODE wifiAuthMode = 4;//wifi密码类型
+optional WIFIENCRYPT WifiEncrypt = 5; //wifi密码加密方式
+required string deviceid = 6;//柜机id
+optional string modules_name = 7;//
+optional string ipaddr = 8;// ip address
+optional CURRENTNETSTATE currentNetState =9; //wifi 所处的网络的情况
+optional string bssid=10;  //wifi_ap bssid
+}
+//柜机设置wifi结果反馈
+message CMsgBodyWifiSetupAck
+{
+required RESCODE resCode = 1;//返回状态码 0网路配置失败,1网路配置成功
+}
+enum REALPLMN
+{
+	REALPLMNMOBILEGSM= 46000; //中国移动GSM
+	REALPLMNUNICOMGSM= 46001; //中国联通GSM
+	REALPLMNMOBILETD=  46002;  //中国移动TD-S
+	REALPLMNCTCCDMA=   46003;  //中国电信CDMA
+
+	REALPLMNCTC4G     = 46005;	//中国电信4G
+	REALPLMNUNICOM4G  = 46006;	//中国联通4G
+	REALPLMNMOBILE4G = 46007;		//中国移动4G
+}
+
+//柜机设置2G信息
+message CMsgBodyGsmSetupInfo
+{
+required CONNECTNETTYPE connectNetworkType = 1;//联网方式
+required string deviceid = 2;//柜机id
+optional string  imei= 3;//IMEI
+optional string iccid= 4;//iccid
+optional string imsi= 5;//imsi
+optional string modules_name= 6;// EC20(4G),M26(2G),G510(2G),L710(4G)
+optional string ipaddr= 7;	// 
+optional REALPLMN RealPLMN =8; //public land mobile network (PLMN),连上基站后的运营商信息。
+optional CURRENTNETSTATE currentNetState =9; //G网 所处的网络的情况
+}
+//柜机设置2G结果反馈
+message CMsgBodyGsmSetupAck
+{
+required RESCODE resCode = 1;//返回状态码 0网路配置失败,1网路配置成功
+}
+
+//server 返回状态码 0网路配置失败,1网路配置成功
+enum RESCODE
+{
+RESCODEFAIL=0;      //fail
+RESCODESUC=1;      //success
+}
+//柜机2G损耗流量上报到服务器
+message CMsgBodyGsmFlowInfo
+{
+required string deviceid = 1; //柜机id
+required int64 devUnixTime=2;//柜机unix时间
+required int64 gsmFlowBytes=3;//2g流量使用情况 Bytes(字节)
+}
+//服务器返回收到流量的确认信息
+message CMsgBodyGsmFlowAck
+{
+required RESCODE resCode = 1;//返回状态码 0确认收到正确信息，1确认收到错误信息
+}
+//3.5.安装电源
+message CMsgBodyInstallBatteryResult
+{
+required string deviceId =1;//柜机ID
+required int32 slotNum =2;//上一个卡槽序号
+required InstallBatteryResCode resCode =3;//电源安装结果
+required int32 nextSlotNum =4;//下一个卡槽序号 
+required InstallBatteryOpenCode openCode = 5;
+}
+enum InstallBatteryOpenCode
+{
+OPENCODEOK = 1;//成功打开
+OPENCODEFULL = 2;//无可用卡槽
+OPENCODEFAIL = 3;//上一次异常停止
+}
+enum InstallBatteryResCode
+{
+RESCODEOK = 1;//插入成功
+RESCODENOTPLUGIN = 2;//用户未插入
+RESCODEERROR = 3;//电源无法识别
+}
+message CMsgBodyGetBatteryPassword
+{
+required string deviceId =1;//柜机ID
+required string batterySn= 2;//电源SN
+}
+message CMsgBodyGetBatteryPasswordAck
+{
+required int32 resCode = 1;// 状态码：0表示获取失败，1表示获取成功
+required string deviceId =2;//柜机ID
+required string batterySn= 3;//电源SN
+required string batteryPassword= 4;//电源密码
+}
+message CMsgBodyWifiClearInfo
+{
+
+}
+message CMsgBodyWifiClearAck
+{
+	required string deviceId =1;//柜机ID
+	required RESCODE resCode = 2;//返回状态码 0清空wifi失败,1清空wifi成功
+}
+enum DEVICE_OFFLINE_STATUS_CODE
+{
+	DOS_SOFT_RESET=1;        //软复位
+	DOS_HARD_RESET=2;		//硬复位	
+}
+message CMsgBodyDeviceOfflineStatus
+{
+	required string deviceId =1;//柜机ID
+	required int64 devUnixtimestamp=2;//柜机离线的时间戳
+	optional DEVICE_OFFLINE_STATUS_CODE state=3;//柜机离线的原因
+}
+message CMsgBodyDeviceOfflineAck
+{
+	required RESCODE resCode = 1;//服务器返回状态码 0未收到,1已收到
+}
+
+enum DEVICE_REBOOT_CODE
+{
+	DRC_UPGRADE_REBOOT=1;        //升级重启
+}
+message CMsgBodyDeviceRebootSys
+{
+	required string deviceId =1;//柜机ID
+	required DEVICE_REBOOT_CODE state=2;  //即将重启的原因
+}
+message CMsgBodyDeviceRebootSysAck
+{
+	required RESCODE resCode = 1;//服务器返回状态码，1表示可以重启
+}
+//smart link
+message CMsgBodySmartLinkAuthReq
+{
+	required string deviceId = 1;//柜机id
+}
+//smart link
+message CMsgBodySmartLinkAuthAck
+{
+	required RESCODE resCode = 1;//返回状态码 0,不允许;1,允许.
+}
+
+message CMsgBodySmartLinkResult  // smart link's result of config
+{
+	required string deviceId = 1;//柜机id
+	required RESCODE resCode = 2;//返回状态码 0 fail;1,suc.
+}
+message CMsgBodySlotLock //锁定/解锁固定卡槽
+{
+	required int32 num = 1;               // slot num
+	required SLOTLOCKFLAG slotlockAction=2;
+}
+message CMsgBodySlotLockAck//回复服务器是否锁定/解锁成功
+{
+	required int32 num = 1;               // slot num 
+	required SLOTLOCKFLAG lockStatus=2;
+	required string deviceId = 3;//柜机id	
+	required RESCODE resCode = 4;//1 解锁/锁定 slot_num 成功,0解锁/锁定 slot_num 失败
+}
+
+
+
+message TipsImages
+{
+    required string code = 1; //业务代码
+    required int32 materialId = 2;  //素材id
+    required MaterialType type = 3; //素材类型
+    optional string title = 4; //素材标题
+    required string url = 5; //素材地址
+    required string md5 = 6; //素材md5验证值
+    required int32 showTime = 7; //素材展示时间（单位s）
+}
+
+message CMsgBodyTipsImages//提示图片，目前主要用于坞托屏
+{
+    repeated TipsImages tipsImages = 4; //素材列表
+}
+
+//提示图片回执
+message TipsImagesAck{
+    required int32 materialId = 1;//素材id
+    required string code = 2; //业务代码
+    required AdvScheduleResCode resCode = 3;//状态
+}
+//柜机上报提示图片状态回执
+message CMsgBodyTipsImagesReport
+{
+    required string deviceId = 1;//柜机id
+    repeated TipsImagesAck tipsImagesAck = 2;//状态列表
+}
+
+
+//大柜机专用指令部份
+enum MaterialType
+{
+    IMG = 1;//图片
+    VIDEO = 2;//视频
+}
+//广告素材
+message Material
+{
+    required int32 materialId = 1;  //素材id
+    required MaterialType type = 2; //素材类型
+    optional string title = 3; //素材标题
+    required string url = 4; //素材地址
+    optional int32 playTime = 5; //播放时间
+    required string animationMode = 6; //动画类型
+    optional string md5 = 7; //素材md5验证值
+}
+//播放列表
+message PlayView
+{
+    required int32 playId = 1; //列表id
+    optional string title = 2; //列表标题
+    required string position = 3; //列表位置
+    repeated Material material = 4; //素材列表
+}
+//排期消息体
+message CMsgBodyAdvScheduleList
+{
+    required int32 scheduleId = 1;//排期id
+    required int32 startTime = 2; //开始时间
+    required int32 endTime = 3; //结束时间
+    repeated PlayView playView = 4;//关联播放列表
+}
+//素材状态
+enum AdvScheduleResCode
+{
+    RESCODE_RECIVE = 1;//接收成功
+    RESCOD_DOWNLOAD = 2;//下载成功
+    RESCOD_PLAYED = 3;//开始播放
+}
+//广告排期回执
+message AdvScheduleListAck{
+    required int32 scheduleId = 1;//排期id
+    required int32 playId = 2;//列表id
+    required int32 materialId = 3;//素材id
+    required AdvScheduleResCode resCode = 4;//状态
+}
+
+//扩展信息，用来下发柜机端的提示文案等信息
+message extInfo
+{
+    required string key = 1;//key
+    required string value = 2;
+}
+
+//柜机上报广告排期状态回执
+message CMsgBodyAdvScheduleListReport
+{
+    required string deviceId = 1;//柜机id
+    repeated AdvScheduleListAck advScheduleListAck = 2;//状态列表
+}
+//广告播放统计数据上报
+message CMsgBodyAdvPlayCount
+{
+    required string deviceId = 1;//柜机ID
+    required int32 countStartTime = 2;//统计开始时间
+    required int32 countReportTime = 3;//统计上报时间
+    repeated AdvPlayCount advPlayCount = 4;//统计内容
+}
+message AdvPlayCount
+{
+    required int32 scheduleId = 2;//排期id
+    required int32 playId = 3;//列表id
+    required int32 materialId = 4;//素材id
+    required int32 playCount = 5;//播放次数
+}
+//广告播放统计数据上报服务器回执
+message CMsgBodyAdvPlayCountAck
+{
+    required int32 scheduleId = 1;//排期id
+    required int32 playId = 2;//列表id
+    required int32 materialId = 3;//素材id
+}
+
+//柜机上报柜机通用数据
+message CMsgBodyExtInfoRequest
+{
+    required string deviceId  = 1;//柜机id
+    optional int32 volume  = 2 [default = -1];//音量，1-100
+    repeated extInfo extInfo = 3;//扩展字段
+}
+
+message CMsgBodyHttpDnsUpdate 
+{
+    repeated string  mqttList = 1;//mqtt list
+    repeated string  httpList = 2;//httpList list
+}
+message CMsgBodyHttpDnsUpdateAck
+{
+    required string deviceId = 1;//柜机id
+	required RESCODE resCode = 2;//返回状态码 0确认收到正确信息，1确认收到错误信息
+}
+
+message CMsgBodyGetServerTimeReq
+{
+	required int32 msgId = 1;			//消息id
+	required string deviceId = 2;		//柜机id
+}
+
+message CMsgBodyGetServerTimeAck
+{
+	required int32 msgId = 1;			//消息id, 必须与CMsgBodyGetServerTimeReq中的msgId一致
+	required string deviceId = 2;  		//柜机id
+	required int32 reqRecvTimeSec = 3;	//服务器接收到柜机消息的时间(UTC时间):秒数
+	required int32 reqRecvTimeMSec = 4;	//服务器接收到柜机消息的时间(UTC时间):毫秒数
+	required int32 ackSendTimeSec = 5;	//服务器发送消息给柜机的时间(UTC时间):秒数
+	required int32 ackSendTimeMSec = 6;	//服务器发送消息给柜机的时间(UTC时间):毫秒数
+}
+
+message Battversion
+{
+	required int32 num = 1; 			//卡槽号
+	optional string battversion = 2; 	//此卡槽的BATT板的版本号
+}
+
+message CMsgBodyGetBattVersionReq 
+{
+	required string deviceId = 1;//柜机id
+}
+
+message CMsgBodyGetBattVersionAck
+{
+    required string deviceId = 1;//柜机id
+	repeated Battversion battVersion=2;//卡槽BATT板的版本
+}
+
+message CMsgBodyBattVersionAck
+{
+	required RESCODE resCode = 1;//返回状态码 0表示处理失败,1表示接收并处理成功
+}
