@@ -1,0 +1,2 @@
+protoc-c --c_out=. test.proto
+gcc main.c battery_ageing.pb-c.c battery_ageing.pb-c.h -o main -lprotobuf-c -I /usr/local/include/protobuf-c -L /usr/local/lib

@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+message BatteryAgeingInfo {
+  required string timestamp=1;
+  required string battery_sn=2;
+  required int32 slot_num=3;
+  required int32 temprature=4;
+  required int32 voltage=5;
+  required int32 current=6; 
+  required int32 elapsed=7;
+}
+
+message UploadInfo {
+  repeated BatteryAgeingInfo battery_ageing_info = 1;
+}
