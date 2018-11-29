@@ -7,218 +7,553 @@
 #endif
 
 #include "battery_ageing.pb-c.h"
-void   bmessage__init
-                     (BMessage         *message)
+void   battery_ageing_info__init
+                     (BatteryAgeingInfo         *message)
 {
-  static BMessage init_value = BMESSAGE__INIT;
+  static BatteryAgeingInfo init_value = BATTERY_AGEING_INFO__INIT;
   *message = init_value;
 }
-size_t bmessage__get_packed_size
-                     (const BMessage *message)
+size_t battery_ageing_info__get_packed_size
+                     (const BatteryAgeingInfo *message)
 {
-  assert(message->base.descriptor == &bmessage__descriptor);
+  assert(message->base.descriptor == &battery_ageing_info__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t bmessage__pack
-                     (const BMessage *message,
+size_t battery_ageing_info__pack
+                     (const BatteryAgeingInfo *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &bmessage__descriptor);
+  assert(message->base.descriptor == &battery_ageing_info__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t bmessage__pack_to_buffer
-                     (const BMessage *message,
+size_t battery_ageing_info__pack_to_buffer
+                     (const BatteryAgeingInfo *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &bmessage__descriptor);
+  assert(message->base.descriptor == &battery_ageing_info__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-BMessage *
-       bmessage__unpack
+BatteryAgeingInfo *
+       battery_ageing_info__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (BMessage *)
-     protobuf_c_message_unpack (&bmessage__descriptor,
+  return (BatteryAgeingInfo *)
+     protobuf_c_message_unpack (&battery_ageing_info__descriptor,
                                 allocator, len, data);
 }
-void   bmessage__free_unpacked
-                     (BMessage *message,
+void   battery_ageing_info__free_unpacked
+                     (BatteryAgeingInfo *message,
                       ProtobufCAllocator *allocator)
 {
-  assert(message->base.descriptor == &bmessage__descriptor);
+  assert(message->base.descriptor == &battery_ageing_info__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   amessage__init
-                     (AMessage         *message)
+void   upload_info__init
+                     (UploadInfo         *message)
 {
-  static AMessage init_value = AMESSAGE__INIT;
+  static UploadInfo init_value = UPLOAD_INFO__INIT;
   *message = init_value;
 }
-size_t amessage__get_packed_size
-                     (const AMessage *message)
+size_t upload_info__get_packed_size
+                     (const UploadInfo *message)
 {
-  assert(message->base.descriptor == &amessage__descriptor);
+  assert(message->base.descriptor == &upload_info__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t amessage__pack
-                     (const AMessage *message,
+size_t upload_info__pack
+                     (const UploadInfo *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &amessage__descriptor);
+  assert(message->base.descriptor == &upload_info__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t amessage__pack_to_buffer
-                     (const AMessage *message,
+size_t upload_info__pack_to_buffer
+                     (const UploadInfo *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &amessage__descriptor);
+  assert(message->base.descriptor == &upload_info__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-AMessage *
-       amessage__unpack
+UploadInfo *
+       upload_info__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (AMessage *)
-     protobuf_c_message_unpack (&amessage__descriptor,
+  return (UploadInfo *)
+     protobuf_c_message_unpack (&upload_info__descriptor,
                                 allocator, len, data);
 }
-void   amessage__free_unpacked
-                     (AMessage *message,
+void   upload_info__free_unpacked
+                     (UploadInfo *message,
                       ProtobufCAllocator *allocator)
 {
-  assert(message->base.descriptor == &amessage__descriptor);
+  assert(message->base.descriptor == &upload_info__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor bmessage__field_descriptors[2] =
+static const ProtobufCFieldDescriptor battery_ageing_info__field_descriptors[23] =
 {
   {
-    "m",
+    "timestamp",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(BMessage, m),
+    offsetof(BatteryAgeingInfo, timestamp),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "n",
+    "battery_sn",
     2,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
-    offsetof(BMessage, n),
+    offsetof(BatteryAgeingInfo, battery_sn),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "slot_num",
+    3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, slot_num),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "voltage",
+    4,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, voltage),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "current",
+    5,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, current),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "temprature",
+    6,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, temprature),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "elapsed",
+    7,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, elapsed),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "discharging",
+    8,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, discharging),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_temprature",
+    9,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _temprature),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_voltage",
+    10,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _voltage),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_fullChargecapacity",
+    11,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _fullchargecapacity),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_remainingcapacity",
+    12,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _remainingcapacity),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_averagecurrent",
+    13,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _averagecurrent),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_cyclecount",
+    14,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _cyclecount),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_bmssafetyStatus",
+    15,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _bmssafetystatus),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_bmsflags",
+    16,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _bmsflags),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_batterystatus",
+    17,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _batterystatus),
+    &heart__beat__battery__code__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_chargestatus",
+    18,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _chargestatus),
+    &charge__status__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_enablestatus",
+    19,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _enablestatus),
+    &enable__borrow__status__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_slotstatus",
+    20,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _slotstatus),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_destroyed",
+    21,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _destroyed),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_hasbms",
+    22,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _hasbms),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "_radio",
+    23,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(BatteryAgeingInfo, _radio),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned bmessage__field_indices_by_name[] = {
-  0,   /* field[0] = m */
-  1,   /* field[1] = n */
+static const unsigned battery_ageing_info__field_indices_by_name[] = {
+  12,   /* field[12] = _averagecurrent */
+  16,   /* field[16] = _batterystatus */
+  15,   /* field[15] = _bmsflags */
+  14,   /* field[14] = _bmssafetyStatus */
+  17,   /* field[17] = _chargestatus */
+  13,   /* field[13] = _cyclecount */
+  20,   /* field[20] = _destroyed */
+  18,   /* field[18] = _enablestatus */
+  10,   /* field[10] = _fullChargecapacity */
+  21,   /* field[21] = _hasbms */
+  22,   /* field[22] = _radio */
+  11,   /* field[11] = _remainingcapacity */
+  19,   /* field[19] = _slotstatus */
+  8,   /* field[8] = _temprature */
+  9,   /* field[9] = _voltage */
+  1,   /* field[1] = battery_sn */
+  4,   /* field[4] = current */
+  7,   /* field[7] = discharging */
+  6,   /* field[6] = elapsed */
+  2,   /* field[2] = slot_num */
+  5,   /* field[5] = temprature */
+  0,   /* field[0] = timestamp */
+  3,   /* field[3] = voltage */
 };
-static const ProtobufCIntRange bmessage__number_ranges[1 + 1] =
+static const ProtobufCIntRange battery_ageing_info__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 23 }
 };
-const ProtobufCMessageDescriptor bmessage__descriptor =
+const ProtobufCMessageDescriptor battery_ageing_info__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
-  "BMessage",
-  "BMessage",
-  "BMessage",
+  "BatteryAgeingInfo",
+  "BatteryAgeingInfo",
+  "BatteryAgeingInfo",
   "",
-  sizeof(BMessage),
-  2,
-  bmessage__field_descriptors,
-  bmessage__field_indices_by_name,
-  1,  bmessage__number_ranges,
-  (ProtobufCMessageInit) bmessage__init,
+  sizeof(BatteryAgeingInfo),
+  23,
+  battery_ageing_info__field_descriptors,
+  battery_ageing_info__field_indices_by_name,
+  1,  battery_ageing_info__number_ranges,
+  (ProtobufCMessageInit) battery_ageing_info__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor amessage__field_descriptors[4] =
+static const ProtobufCFieldDescriptor upload_info__field_descriptors[1] =
 {
   {
-    "a",
+    "battery_ageing_info",
     1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_INT32,
-    0,   /* quantifier_offset */
-    offsetof(AMessage, a),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "b",
-    2,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_INT32,
-    offsetof(AMessage, has_b),
-    offsetof(AMessage, b),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "d",
-    4,
-    PROTOBUF_C_LABEL_REPEATED,
-    PROTOBUF_C_TYPE_INT32,
-    offsetof(AMessage, n_d),
-    offsetof(AMessage, d),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
-    "msg",
-    5,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(AMessage, n_msg),
-    offsetof(AMessage, msg),
-    &bmessage__descriptor,
+    offsetof(UploadInfo, n_battery_ageing_info),
+    offsetof(UploadInfo, battery_ageing_info),
+    &battery_ageing_info__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned amessage__field_indices_by_name[] = {
-  0,   /* field[0] = a */
-  1,   /* field[1] = b */
-  2,   /* field[2] = d */
-  3,   /* field[3] = msg */
+static const unsigned upload_info__field_indices_by_name[] = {
+  0,   /* field[0] = battery_ageing_info */
 };
-static const ProtobufCIntRange amessage__number_ranges[2 + 1] =
+static const ProtobufCIntRange upload_info__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 4, 2 },
-  { 0, 4 }
+  { 0, 1 }
 };
-const ProtobufCMessageDescriptor amessage__descriptor =
+const ProtobufCMessageDescriptor upload_info__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
-  "AMessage",
-  "AMessage",
-  "AMessage",
+  "UploadInfo",
+  "UploadInfo",
+  "UploadInfo",
   "",
-  sizeof(AMessage),
-  4,
-  amessage__field_descriptors,
-  amessage__field_indices_by_name,
-  2,  amessage__number_ranges,
-  (ProtobufCMessageInit) amessage__init,
+  sizeof(UploadInfo),
+  1,
+  upload_info__field_descriptors,
+  upload_info__field_indices_by_name,
+  1,  upload_info__number_ranges,
+  (ProtobufCMessageInit) upload_info__init,
   NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCEnumValue heart__beat__battery__code__enum_values_by_number[10] =
+{
+  { "HBB_STATUS_OK", "HEART__BEAT__BATTERY__CODE__HBB_STATUS_OK", 0 },
+  { "HBB_OTHER_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_OTHER_ERROR", 1 },
+  { "HBB_TEMPERATURE_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_TEMPERATURE_ERROR", 2 },
+  { "HBB_VOLTAGE_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_VOLTAGE_ERROR", 3 },
+  { "HBB_CURRENT_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_CURRENT_ERROR", 4 },
+  { "HBB_CYCLECOUNT_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_CYCLECOUNT_ERROR", 5 },
+  { "HBB_INTERFACE_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_INTERFACE_ERROR", 6 },
+  { "HBB_BODY_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_BODY_ERROR", 7 },
+  { "HBB_LINE_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_LINE_ERROR", 8 },
+  { "HBB_BODY_AND_LINE_ERROR", "HEART__BEAT__BATTERY__CODE__HBB_BODY_AND_LINE_ERROR", 9 },
+};
+static const ProtobufCIntRange heart__beat__battery__code__value_ranges[] = {
+{0, 0},{0, 10}
+};
+static const ProtobufCEnumValueIndex heart__beat__battery__code__enum_values_by_name[10] =
+{
+  { "HBB_BODY_AND_LINE_ERROR", 9 },
+  { "HBB_BODY_ERROR", 7 },
+  { "HBB_CURRENT_ERROR", 4 },
+  { "HBB_CYCLECOUNT_ERROR", 5 },
+  { "HBB_INTERFACE_ERROR", 6 },
+  { "HBB_LINE_ERROR", 8 },
+  { "HBB_OTHER_ERROR", 1 },
+  { "HBB_STATUS_OK", 0 },
+  { "HBB_TEMPERATURE_ERROR", 2 },
+  { "HBB_VOLTAGE_ERROR", 3 },
+};
+const ProtobufCEnumDescriptor heart__beat__battery__code__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "HEART_BEAT_BATTERY_CODE",
+  "HEART_BEAT_BATTERY_CODE",
+  "HEARTBEATBATTERYCODE",
+  "",
+  10,
+  heart__beat__battery__code__enum_values_by_number,
+  10,
+  heart__beat__battery__code__enum_values_by_name,
+  1,
+  heart__beat__battery__code__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCEnumValue charge__status__enum_values_by_number[3] =
+{
+  { "UNCHARGE", "CHARGE__STATUS__UNCHARGE", 1 },
+  { "CHARGING", "CHARGE__STATUS__CHARGING", 2 },
+  { "DISCHARGING", "CHARGE__STATUS__DISCHARGING", 3 },
+};
+static const ProtobufCIntRange charge__status__value_ranges[] = {
+{1, 0},{0, 3}
+};
+static const ProtobufCEnumValueIndex charge__status__enum_values_by_name[3] =
+{
+  { "CHARGING", 1 },
+  { "DISCHARGING", 2 },
+  { "UNCHARGE", 0 },
+};
+const ProtobufCEnumDescriptor charge__status__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "CHARGE_STATUS",
+  "CHARGE_STATUS",
+  "CHARGESTATUS",
+  "",
+  3,
+  charge__status__enum_values_by_number,
+  3,
+  charge__status__enum_values_by_name,
+  1,
+  charge__status__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCEnumValue enable__borrow__status__enum_values_by_number[2] =
+{
+  { "ENABLE_STATUS", "ENABLE__BORROW__STATUS__ENABLE_STATUS", 0 },
+  { "DISABLE_STATUS", "ENABLE__BORROW__STATUS__DISABLE_STATUS", 1 },
+};
+static const ProtobufCIntRange enable__borrow__status__value_ranges[] = {
+{0, 0},{0, 2}
+};
+static const ProtobufCEnumValueIndex enable__borrow__status__enum_values_by_name[2] =
+{
+  { "DISABLE_STATUS", 1 },
+  { "ENABLE_STATUS", 0 },
+};
+const ProtobufCEnumDescriptor enable__borrow__status__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "ENABLE_BORROW_STATUS",
+  "ENABLE_BORROW_STATUS",
+  "ENABLEBORROWSTATUS",
+  "",
+  2,
+  enable__borrow__status__enum_values_by_number,
+  2,
+  enable__borrow__status__enum_values_by_name,
+  1,
+  enable__borrow__status__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
 };

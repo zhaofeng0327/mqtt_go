@@ -15,87 +15,208 @@ PROTOBUF_C__BEGIN_DECLS
 #endif
 
 
-typedef struct _BMessage BMessage;
-typedef struct _AMessage AMessage;
+typedef struct _BatteryAgeingInfo BatteryAgeingInfo;
+typedef struct _UploadInfo UploadInfo;
 
 
 /* --- enums --- */
 
+typedef enum _HEARTBEATBATTERYCODE {
+  /*
+   *正常成功
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_STATUS_OK = 0,
+  /*
+   *其他错误
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_OTHER_ERROR = 1,
+  /*
+   *温度错误
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_TEMPERATURE_ERROR = 2,
+  /*
+   *电压错误
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_VOLTAGE_ERROR = 3,
+  /*
+   *电流错误
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_CURRENT_ERROR = 4,
+  /*
+   *电流错误
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_CYCLECOUNT_ERROR = 5,
+  /*
+   *电池接口类型错误
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_INTERFACE_ERROR = 6,
+  /*
+   *电池机身被拆开
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_BODY_ERROR = 7,
+  /*
+   *电池充电线被破坏
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_LINE_ERROR = 8,
+  /*
+   *电池机身被拆开且充电线被破坏
+   */
+  HEART__BEAT__BATTERY__CODE__HBB_BODY_AND_LINE_ERROR = 9
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(HEART__BEAT__BATTERY__CODE)
+} HEARTBEATBATTERYCODE;
+typedef enum _CHARGESTATUS {
+  CHARGE__STATUS__UNCHARGE = 1,
+  CHARGE__STATUS__CHARGING = 2,
+  CHARGE__STATUS__DISCHARGING = 3
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(CHARGE__STATUS)
+} CHARGESTATUS;
+typedef enum _ENABLEBORROWSTATUS {
+  /*
+   *可借状态（电池容量达到）
+   */
+  ENABLE__BORROW__STATUS__ENABLE_STATUS = 0,
+  /*
+   *不可借状态（电池容量没有达到）
+   */
+  ENABLE__BORROW__STATUS__DISABLE_STATUS = 1
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(ENABLE__BORROW__STATUS)
+} ENABLEBORROWSTATUS;
 
 /* --- messages --- */
 
-struct  _BMessage
+struct  _BatteryAgeingInfo
 {
   ProtobufCMessage base;
-  char *m;
-  char *n;
+  char *timestamp;
+  char *battery_sn;
+  int32_t slot_num;
+  int32_t voltage;
+  int32_t current;
+  int32_t temprature;
+  int32_t elapsed;
+  int32_t discharging;
+  /*
+   *电源温度
+   */
+  int32_t _temprature;
+  /*
+   *电源电压
+   */
+  int32_t _voltage;
+  /*
+   *电源最大容量（mAh)
+   */
+  int32_t _fullchargecapacity;
+  /*
+   *剩余容量（mAh)
+   */
+  int32_t _remainingcapacity;
+  /*
+   *充放电电流(mA)
+   */
+  int32_t _averagecurrent;
+  /*
+   *循环次数
+   */
+  int32_t _cyclecount;
+  /*
+   *异常状态，预留，BMS内部状态
+   */
+  int32_t _bmssafetystatus;
+  /*
+   *预留，BMS内部充满标志
+   */
+  int32_t _bmsflags;
+  /*
+   *异常状态
+   */
+  HEARTBEATBATTERYCODE _batterystatus;
+  /*
+   *充放电状态
+   */
+  CHARGESTATUS _chargestatus;
+  /*
+   *可借标志(容量达到一定才能允许用户借)
+   */
+  ENABLEBORROWSTATUS _enablestatus;
+  /*
+   *卡槽状态
+   */
+  int32_t _slotstatus;
+  /*
+   *电池被拆开
+   */
+  int32_t _destroyed;
+  /*
+   *带bms
+   */
+  int32_t _hasbms;
+  /*
+   *电池电量百分比
+   */
+  int32_t _radio;
 };
-#define BMESSAGE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&bmessage__descriptor) \
-    , NULL, NULL }
+#define BATTERY_AGEING_INFO__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&battery_ageing_info__descriptor) \
+    , NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
-struct  _AMessage
+struct  _UploadInfo
 {
   ProtobufCMessage base;
-  int32_t a;
-  protobuf_c_boolean has_b;
-  int32_t b;
-  size_t n_d;
-  int32_t *d;
-  size_t n_msg;
-  BMessage **msg;
+  size_t n_battery_ageing_info;
+  BatteryAgeingInfo **battery_ageing_info;
 };
-#define AMESSAGE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&amessage__descriptor) \
-    , 0, 0,0, 0,NULL, 0,NULL }
+#define UPLOAD_INFO__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&upload_info__descriptor) \
+    , 0,NULL }
 
 
-/* BMessage methods */
-void   bmessage__init
-                     (BMessage         *message);
-size_t bmessage__get_packed_size
-                     (const BMessage   *message);
-size_t bmessage__pack
-                     (const BMessage   *message,
+/* BatteryAgeingInfo methods */
+void   battery_ageing_info__init
+                     (BatteryAgeingInfo         *message);
+size_t battery_ageing_info__get_packed_size
+                     (const BatteryAgeingInfo   *message);
+size_t battery_ageing_info__pack
+                     (const BatteryAgeingInfo   *message,
                       uint8_t             *out);
-size_t bmessage__pack_to_buffer
-                     (const BMessage   *message,
+size_t battery_ageing_info__pack_to_buffer
+                     (const BatteryAgeingInfo   *message,
                       ProtobufCBuffer     *buffer);
-BMessage *
-       bmessage__unpack
+BatteryAgeingInfo *
+       battery_ageing_info__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   bmessage__free_unpacked
-                     (BMessage *message,
+void   battery_ageing_info__free_unpacked
+                     (BatteryAgeingInfo *message,
                       ProtobufCAllocator *allocator);
-/* AMessage methods */
-void   amessage__init
-                     (AMessage         *message);
-size_t amessage__get_packed_size
-                     (const AMessage   *message);
-size_t amessage__pack
-                     (const AMessage   *message,
+/* UploadInfo methods */
+void   upload_info__init
+                     (UploadInfo         *message);
+size_t upload_info__get_packed_size
+                     (const UploadInfo   *message);
+size_t upload_info__pack
+                     (const UploadInfo   *message,
                       uint8_t             *out);
-size_t amessage__pack_to_buffer
-                     (const AMessage   *message,
+size_t upload_info__pack_to_buffer
+                     (const UploadInfo   *message,
                       ProtobufCBuffer     *buffer);
-AMessage *
-       amessage__unpack
+UploadInfo *
+       upload_info__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   amessage__free_unpacked
-                     (AMessage *message,
+void   upload_info__free_unpacked
+                     (UploadInfo *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*BMessage_Closure)
-                 (const BMessage *message,
+typedef void (*BatteryAgeingInfo_Closure)
+                 (const BatteryAgeingInfo *message,
                   void *closure_data);
-typedef void (*AMessage_Closure)
-                 (const AMessage *message,
+typedef void (*UploadInfo_Closure)
+                 (const UploadInfo *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -103,8 +224,11 @@ typedef void (*AMessage_Closure)
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor bmessage__descriptor;
-extern const ProtobufCMessageDescriptor amessage__descriptor;
+extern const ProtobufCEnumDescriptor    heart__beat__battery__code__descriptor;
+extern const ProtobufCEnumDescriptor    charge__status__descriptor;
+extern const ProtobufCEnumDescriptor    enable__borrow__status__descriptor;
+extern const ProtobufCMessageDescriptor battery_ageing_info__descriptor;
+extern const ProtobufCMessageDescriptor upload_info__descriptor;
 
 PROTOBUF_C__END_DECLS
 

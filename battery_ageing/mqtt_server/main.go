@@ -36,26 +36,80 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
 
         for i:=0; i < l; i++ {
 
-            fmt.Println("timestamp : ", *a[i].Timestamp, "BatterySn :", *a[i].BatterySn, "SlotNum", *a[i].SlotNum, "Temprature", *a[i].Temprature,
-            "Voltage", *a[i].Voltage, "Current", *a[i].Current, "Elapsed", *a[i].Elapsed);
+            fmt.Println(
+				"Timestamp"           , *a[i].Timestamp          ,
+				"BatterySn"           , *a[i].BatterySn          ,
+				"SlotNum"             , *a[i].SlotNum            ,
+				"Voltage"             , *a[i].Voltage            ,
+				"Current"             , *a[i].Current            ,
+				"Temprature"          , *a[i].Temprature         ,
+				"Elapsed"             , *a[i].Elapsed            ,
+				"Discharging"         , *a[i].Discharging        ,
+				"XTemprature"         , *a[i].XTemprature        ,
+				"XVoltage"            , *a[i].XVoltage           ,
+				"XFullChargecapacity" , *a[i].XFullChargecapacity,
+				"XRemainingcapacity"  , *a[i].XRemainingcapacity ,
+				"XAveragecurrent"     , *a[i].XAveragecurrent    ,
+				"XCyclecount"         , *a[i].XCyclecount        ,
+				"XBmssafetyStatus"    , *a[i].XBmssafetyStatus   ,
+				"XBmsflags"           , *a[i].XBmsflags          ,
+				"XBatterystatus"      , *a[i].XBatterystatus     ,
+				"XChargestatus"       , *a[i].XChargestatus      ,
+				"XEnablestatus"       , *a[i].XEnablestatus      ,
+				"XSlotstatus"         , *a[i].XSlotstatus        ,
+				"XDestroyed"          , *a[i].XDestroyed         ,
+				"XHasbms"             , *a[i].XHasbms            ,
+				"XRadio"              , *a[i].XRadio             )
 
-            timestamp := *a[i].Timestamp;
-            batterySn := *a[i].BatterySn;
-            slotNum := *a[i].SlotNum;
-            temprature := *a[i].Temprature;
-            voltage := *a[i].Voltage;
-            current :=  *a[i].Current;
-            elapsed := *a[i].Elapsed;
+            timestamp           := *a[i].Timestamp
+            batterySn           := *a[i].BatterySn
+            slotNum             := *a[i].SlotNum
+            voltage             := *a[i].Voltage
+            current             := *a[i].Current
+			temprature          := *a[i].Temprature
+            elapsed             := *a[i].Elapsed
+            discharging         := *a[i].Discharging
+            xtemprature         := *a[i].XTemprature
+            xvoltage            := *a[i].XVoltage
+            xfullchargecapacity := *a[i].XFullChargecapacity
+            xremainingcapacity  := *a[i].XRemainingcapacity
+            xaveragecurrent     := *a[i].XAveragecurrent
+            xcyclecount         := *a[i].XCyclecount
+            xbmssafetystatus    := *a[i].XBmssafetyStatus
+            xbmsflags           := *a[i].XBmsflags
+            xbatterystatus      := int32(*a[i].XBatterystatus)
+            xchargestatus       := int32(*a[i].XChargestatus)
+            xenablestatus       := int32(*a[i].XEnablestatus)
+            xslotstatus         := *a[i].XSlotstatus
+            xdestroyed          := *a[i].XDestroyed
+            xhasbms             := *a[i].XHasbms
+            xradio              := *a[i].XRadio
 
 			msg := db_mysql.MqttMsg{
-				0,
-                timestamp,
-                batterySn,
-                slotNum,
-                temprature,
-                voltage,
-                current,
-                elapsed,
+				0                   ,
+				timestamp           ,
+				batterySn           ,
+				slotNum             ,
+				voltage             ,
+				current             ,
+				temprature          ,
+				elapsed             ,
+				discharging         ,
+				xtemprature         ,
+				xvoltage            ,
+				xfullchargecapacity ,
+				xremainingcapacity  ,
+				xaveragecurrent     ,
+				xcyclecount         ,
+				xbmssafetystatus    ,
+				xbmsflags           ,
+				xbatterystatus      ,
+				xchargestatus       ,
+				xenablestatus       ,
+				xslotstatus         ,
+				xdestroyed          ,
+				xhasbms             ,
+				xradio              ,
             };
 
 			//save to mysql

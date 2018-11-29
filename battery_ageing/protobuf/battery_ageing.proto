@@ -1,13 +1,56 @@
 syntax = "proto2";
 
+enum HEART_BEAT_BATTERY_CODE
+{
+  HBB_STATUS_OK = 0;//正常成功
+  HBB_OTHER_ERROR = 1;//其他错误
+  HBB_TEMPERATURE_ERROR = 2;//温度错误
+  HBB_VOLTAGE_ERROR = 3;//电压错误
+  HBB_CURRENT_ERROR = 4;//电流错误
+  HBB_CYCLECOUNT_ERROR = 5;//电流错误
+  HBB_INTERFACE_ERROR = 6;//电池接口类型错误
+  HBB_BODY_ERROR=7; //电池机身被拆开
+  HBB_LINE_ERROR=8; //电池充电线被破坏
+  HBB_BODY_AND_LINE_ERROR=9; //电池机身被拆开且充电线被破坏
+}
+
+enum CHARGE_STATUS
+{
+  UNCHARGE=1;
+  CHARGING=2;
+  DISCHARGING=3;
+}
+
+enum ENABLE_BORROW_STATUS
+{
+  ENABLE_STATUS = 0;//可借状态（电池容量达到）
+  DISABLE_STATUS = 1;//不可借状态（电池容量没有达到）
+}
+
 message BatteryAgeingInfo {
   required string timestamp=1;
   required string battery_sn=2;
   required int32 slot_num=3;
-  required int32 temprature=4;
-  required int32 voltage=5;
-  required int32 current=6; 
+  required int32 voltage=4;
+  required int32 current=5;
+  required int32 temprature=6;
   required int32 elapsed=7;
+  required int32 discharging=8;
+  required int32 _temprature=9;//电源温度
+  required int32 _voltage =10; //电源电压
+  required int32 _fullChargecapacity =11; //电源最大容量（mAh)
+  required int32 _remainingcapacity =12; //剩余容量（mAh)
+  required int32 _averagecurrent = 13;//充放电电流(mA)
+  required int32 _cyclecount = 14;   //循环次数
+  required int32 _bmssafetyStatus =15;//异常状态，预留，BMS内部状态
+  required int32 _bmsflags = 16;      //预留，BMS内部充满标志
+  required HEART_BEAT_BATTERY_CODE _batterystatus= 17;           //异常状态
+  required CHARGE_STATUS _chargestatus=18;   //充放电状态
+  required ENABLE_BORROW_STATUS _enablestatus = 19;           //可借标志(容量达到一定才能允许用户借)
+  required int32 _slotstatus=20; //卡槽状态
+  required int32 _destroyed=21; //电池被拆开
+  required int32 _hasbms=22; //带bms
+  required int32 _radio=23;//电池电量百分比
 }
 
 message UploadInfo {

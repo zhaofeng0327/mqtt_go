@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const DATABASE_NAME = "battery_ageing"
+
 type MysqlDB struct {
 	conn *sql.DB
 }
@@ -25,12 +27,32 @@ type MySQLConfig struct {
 }
 
 type MqttMsg struct {
-	Id                                       int32
-	Timestamp, Batterysn   string 
-    Slotnum, Temprature, Voltage, Current, Elapsed int32
+	Id                  int32
+	Timestamp           string
+	Batterysn           string
+	Slotnum             int32
+	Voltage             int32
+	Current             int32
+	Temprature          int32
+	Elapsed             int32
+	Discharging         int32
+	XTemprature         int32
+	XVoltage            int32
+	XFullChargecapacity int32
+	XRemainingcapacity  int32
+	XAveragecurrent     int32
+	XCyclecount         int32
+	XBmssafetyStatus    int32
+	XBmsflags           int32
+	XBatterystatus      int32
+	XChargestatus       int32
+	XEnablestatus       int32
+	XSlotstatus         int32
+	XDestroyed          int32
+	XHasbms             int32
+	XRadio              int32
 }
 
-const DATABASE_NAME = "battery_ageing"
 
 // dataStoreName returns a connection string suitable for sql.Open.
 func (c MySQLConfig) dataStoreName(databaseName string) string {
@@ -96,7 +118,31 @@ func createTable(conn *sql.DB, database_name, table_name string) error {
 	createTableStatements[0] = fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v %v", database_name, "DEFAULT CHARACTER SET = 'utf8' DEFAULT COLLATE 'utf8_general_ci';")
 	createTableStatements[1] = fmt.Sprintf("USE %v", database_name)
 	createTableStatements[2] = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v %v", table_name,
-		"(id INT UNSIGNED NOT NULL AUTO_INCREMENT, timestamp TEXT NULL, batterysn TEXT NULL, slotnum INT NULL, temprature INT NULL, voltage INT NULL, current INT NULL, elapsed INT NULL, PRIMARY KEY (id))")
+		"(id INT UNSIGNED NOT NULL AUTO_INCREMENT, " +
+		"timestamp           TEXT NULL, " +
+		"batterysn           TEXT NULL, " +
+		"slotnum             INT  NULL, " +
+		"voltage             INT  NULL, " +
+		"current             INT  NULL, " +
+		"temprature          INT  NULL, " +
+		"elapsed             INT  NULL, " +
+		"discharging         INT  NULL, " +
+		"xtemprature         INT  NULL, " +
+		"xvoltage            INT  NULL, " +
+		"xfullchargecapacity INT  NULL, " +
+		"xremainingcapacity  INT  NULL, " +
+		"xaveragecurrent     INT  NULL, " +
+		"xcyclecount         INT  NULL, " +
+		"xbmssafetystatus    INT  NULL, " +
+		"xbmsflags           INT  NULL, " +
+		"xbatterystatus      INT  NULL, " +
+		"xchargestatus       INT  NULL, " +
+		"xenablestatus       INT  NULL, " +
+		"xslotstatus         INT  NULL, " +
+		"xdestroyed          INT  NULL, " +
+		"xhasbms             INT  NULL, " +
+		"xradio              INT  NULL, " +
+		"PRIMARY KEY (id))")
 
 	for _, stmt := range createTableStatements {
 		fmt.Println("sql cmd : ", stmt)
@@ -161,29 +207,86 @@ type rowScanner interface {
 // scanMqttMsg reads a mqtt message from a sql.Row or sql.Rows
 func scanMqttMsg(s rowScanner) (*MqttMsg, error) {
 	var (
-        id        int32
-        timestamp sql.NullString
-        batterysn sql.NullString
-        slotnum   int32
-        temprature int32
-        voltage   int32
-        current   int32
-        elapsed   int32
+		id                   int32
+		timestamp            sql.NullString
+		batterysn            sql.NullString
+		slotnum              int32
+		voltage              int32
+		current              int32
+		temprature           int32
+		elapsed              int32
+		discharging          int32
+		xtemprature          int32
+		xvoltage             int32
+		xfullchargecapacity  int32
+		xremainingcapacity   int32
+		xaveragecurrent      int32
+		xcyclecount          int32
+		xbmssafetystatus     int32
+		xbmsflags            int32
+		xbatterystatus       int32
+		xchargestatus        int32
+		xenablestatus        int32
+		xslotstatus          int32
+		xdestroyed           int32
+		xhasbms              int32
+		xradio               int32
     )
 
-	if err := s.Scan(&id, &batterysn, &slotnum, &temprature, &voltage, &current, &elapsed); err != nil {
+	if err := s.Scan(
+		&id                  ,
+		&timestamp           ,
+		&batterysn           ,
+		&slotnum             ,
+		&voltage             ,
+		&current             ,
+		&temprature          ,
+		&elapsed             ,
+		&discharging         ,
+		&xtemprature         ,
+		&xvoltage            ,
+		&xfullchargecapacity ,
+		&xremainingcapacity  ,
+		&xaveragecurrent     ,
+		&xcyclecount         ,
+		&xbmssafetystatus    ,
+		&xbmsflags           ,
+		&xbatterystatus      ,
+		&xchargestatus       ,
+		&xenablestatus       ,
+		&xslotstatus         ,
+		&xdestroyed          ,
+		&xhasbms             ,
+		&xradio              ,
+		); err != nil {
 		return nil, err
 	}
 
-	msg := &MqttMsg{
-		Id:        id,
-		Timestamp: timestamp.String,
-        Batterysn: batterysn.String,
-        Slotnum: slotnum,
-        Temprature: temprature,
-        Voltage: voltage,
-        Current: current,
-        Elapsed: elapsed,
+	msg := &MqttMsg {
+		Id                  : id                 ,
+		Timestamp           : timestamp.String   ,
+		Batterysn           : batterysn.String   ,
+		Slotnum             : slotnum            ,
+		Voltage             : voltage            ,
+		Current             : current            ,
+		Temprature          : temprature         ,
+		Elapsed             : elapsed            ,
+		Discharging         : discharging        ,
+		XTemprature         : xtemprature        ,
+		XVoltage            : xvoltage           ,
+		XFullChargecapacity : xfullchargecapacity,
+		XRemainingcapacity  : xremainingcapacity ,
+		XAveragecurrent     : xaveragecurrent    ,
+		XCyclecount         : xcyclecount        ,
+		XBmssafetyStatus    : xbmssafetystatus   ,
+		XBmsflags           : xbmsflags          ,
+		XBatterystatus      : xbatterystatus     ,
+		XChargestatus       : xchargestatus      ,
+		XEnablestatus       : xenablestatus      ,
+		XSlotstatus         : xslotstatus        ,
+		XDestroyed          : xdestroyed         ,
+		XHasbms             : xhasbms            ,
+		XRadio              : xradio             ,
 	}
 
 	return msg, nil
@@ -255,16 +358,62 @@ func (db *MysqlDB) GetMqttMsgById(table_name string, id int64) (*MqttMsg, error)
 	return msg, nil
 }
 
-  
-
 
 func (db *MysqlDB) InsertMqttMsg(table_name string, msg *MqttMsg) (id int64, err error) {
-	stmt, err := db.conn.Prepare("INSERT INTO " + table_name + " (timestamp, batterysn, slotnum, temprature, voltage, current, elapsed) VALUES ( ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.conn.Prepare("INSERT INTO " + table_name + " (" +
+	"timestamp           , " +
+	"batterysn           , " +
+	"slotnum             , " +
+	"voltage             , " +
+	"current             , " +
+	"temprature          , " +
+	"elapsed             , " +
+	"discharging         , " +
+	"xtemprature         , " +
+	"xvoltage            , " +
+	"xfullchargecapacity , " +
+	"xremainingcapacity  , " +
+	"xaveragecurrent     , " +
+	"xcyclecount         , " +
+	"xbmssafetystatus    , " +
+	"xbmsflags           , " +
+	"xbatterystatus      , " +
+	"xchargestatus       , " +
+	"xenablestatus       , " +
+	"xslotstatus         , " +
+	"xdestroyed          , " +
+	"xhasbms             , " +
+	"xradio                " +
+	") VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return 0, fmt.Errorf("mysql: prepare list by cmd: %v", err)
 	}
 
-	r, err := execAffectingOneRow(stmt, msg.Timestamp, msg.Batterysn, msg.Slotnum, msg.Temprature, msg.Voltage, msg.Current, msg.Elapsed)
+	r, err := execAffectingOneRow(stmt,
+		msg.Timestamp           ,
+		msg.Batterysn           ,
+		msg.Slotnum             ,
+		msg.Voltage             ,
+		msg.Current             ,
+		msg.Temprature          ,
+		msg.Elapsed             ,
+		msg.Discharging         ,
+		msg.XTemprature         ,
+		msg.XVoltage            ,
+		msg.XFullChargecapacity ,
+		msg.XRemainingcapacity  ,
+		msg.XAveragecurrent     ,
+		msg.XCyclecount         ,
+		msg.XBmssafetyStatus    ,
+		msg.XBmsflags           ,
+		msg.XBatterystatus      ,
+		msg.XChargestatus       ,
+		msg.XEnablestatus       ,
+		msg.XSlotstatus         ,
+		msg.XDestroyed          ,
+		msg.XHasbms             ,
+		msg.XRadio              )
+
 	if err != nil {
 		return 0, err
 	}
@@ -292,9 +441,60 @@ func (db *MysqlDB) UpdateMqttMsg(table_name string, msg *MqttMsg) error {
 		return errors.New("mysql: update msg id == 0")
 	}
 
-   
-	stmt, err := db.conn.Prepare("UPDATE " + table_name + " SET id=?, timestamp=?, batterysn=?, slotnum=?, temprature=?, voltage=?, current=?, elapsed=?, WHERE id = ?")
-	_, err = execAffectingOneRow(stmt, msg.Id, msg.Timestamp, msg.Batterysn, msg.Slotnum, msg.Temprature, msg.Voltage, msg.Current, msg.Elapsed)
+
+	stmt, err := db.conn.Prepare("UPDATE " + table_name + " SET " +
+		"id                  =?, " +
+		"timestamp           =?, " +
+		"batterysn           =?, " +
+		"slotnum             =?, " +
+		"voltage             =?, " +
+		"current             =?, " +
+		"temprature=         =?, " +
+		"elapsed             =?, " +
+		"discharging         =?, " +
+		"xtemprature         =?, " +
+		"xvoltage            =?, " +
+		"xfullchargecapacity =?, " +
+		"xremainingcapacity  =?, " +
+		"xaveragecurrent     =?, " +
+		"xcyclecount         =?, " +
+		"xbmssafetystatus    =?, " +
+		"xbmsflags           =?, " +
+		"xbatterystatus      =?, " +
+		"xchargestatus       =?, " +
+		"xenablestatus       =?, " +
+		"xslotstatus         =?, " +
+		"xdestroyed          =?, " +
+		"xhasbms             =?, " +
+		"xradio              =?, " +
+		"WHERE id = ?")
+
+		_, err = execAffectingOneRow(stmt,
+			msg.Id                  ,
+			msg.Timestamp           ,
+			msg.Batterysn           ,
+			msg.Slotnum             ,
+			msg.Voltage             ,
+			msg.Current             ,
+			msg.Temprature          ,
+			msg.Elapsed             ,
+			msg.Discharging         ,
+			msg.XTemprature         ,
+			msg.XVoltage            ,
+			msg.XFullChargecapacity ,
+			msg.XRemainingcapacity  ,
+			msg.XAveragecurrent     ,
+			msg.XCyclecount         ,
+			msg.XBmssafetyStatus    ,
+			msg.XBmsflags           ,
+			msg.XBatterystatus      ,
+			msg.XChargestatus       ,
+			msg.XEnablestatus       ,
+			msg.XSlotstatus         ,
+			msg.XDestroyed          ,
+			msg.XHasbms             ,
+			msg.XRadio              )
+
 	return err
 }
 
