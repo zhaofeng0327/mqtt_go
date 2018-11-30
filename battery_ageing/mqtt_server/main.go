@@ -16,9 +16,16 @@ import (
 var db *db_mysql.MysqlDB
 var c mqtt.Client
 
+const MQTT_SERVER_ADDR = "tcp://120.79.223.61:1883"
+const MQTT_USER_NAME = "admin"
+const MQTT_PASSWORD = "public"
+const MQTT_ALIVE_PERIOD = 60
+const MQTT_PING_TIMEOUT = 2
+
 const TOPIC_CTS = "CTS/#"
 const TOPIC_STC = "STC/#"
 const TOPIC_CTS_TYPE = "CTS"
+const CLIENT_ID_SERVER = "client_id_server"
 
 var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 
@@ -218,13 +225,13 @@ func main() {
 
 	mqtt.ERROR = log.New(os.Stdout, "", 0)
 
-	opts := mqtt.NewClientOptions().AddBroker("tcp://120.79.223.61:1883").SetClientID("123")
+	opts := mqtt.NewClientOptions().AddBroker(MQTT_SERVER_ADDR).SetClientID(CLIENT_ID_SERVER)
 	opts.SetAutoReconnect(true)
-	opts.SetKeepAlive(60 * time.Second)
+	opts.SetKeepAlive(MQTT_ALIVE_PERIOD * time.Second)
 	opts.SetDefaultPublishHandler(mqttPublishHandler)
-	opts.SetPingTimeout(2 * time.Second)
-	opts.SetUsername("admin")
-	opts.SetPassword("public")
+	opts.SetPingTimeout(MQTT_PING_TIMEOUT * time.Second)
+	opts.SetUsername(MQTT_USER_NAME)
+	opts.SetPassword(MQTT_PASSWORD)
 	opts.SetConnectionLostHandler(mqttConnectionLostHanler)
 
 	c = mqtt.NewClient(opts)
