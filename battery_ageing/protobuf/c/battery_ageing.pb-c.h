@@ -17,6 +17,8 @@ PROTOBUF_C__BEGIN_DECLS
 
 typedef struct _BatteryAgeingInfo BatteryAgeingInfo;
 typedef struct _UploadInfo UploadInfo;
+typedef struct _DischargeSetting DischargeSetting;
+typedef struct _MSGBODY MSGBODY;
 
 
 /* --- enums --- */
@@ -81,6 +83,16 @@ typedef enum _ENABLEBORROWSTATUS {
   ENABLE__BORROW__STATUS__DISABLE_STATUS = 1
     PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(ENABLE__BORROW__STATUS)
 } ENABLEBORROWSTATUS;
+typedef enum _DISCHARGECMD {
+  DISCHARGE__CMD__START_DISCHARGE = 1,
+  DISCHARGE__CMD__STOP_DISCHARGE = 2
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(DISCHARGE__CMD)
+} DISCHARGECMD;
+typedef enum _MSGTYPE {
+  MSG__TYPE__UPLOAD_INFO = 1,
+  MSG__TYPE__DISCHARGE_SETTING = 2
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(MSG__TYPE)
+} MSGTYPE;
 
 /* --- messages --- */
 
@@ -172,6 +184,29 @@ struct  _UploadInfo
     , 0,NULL }
 
 
+struct  _DischargeSetting
+{
+  ProtobufCMessage base;
+  DISCHARGECMD cmd;
+  int32_t level;
+};
+#define DISCHARGE_SETTING__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&discharge_setting__descriptor) \
+    , 0, 0 }
+
+
+struct  _MSGBODY
+{
+  ProtobufCMessage base;
+  MSGTYPE type;
+  UploadInfo *up_info;
+  DischargeSetting *dis_setting;
+};
+#define MSG__BODY__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&msg__body__descriptor) \
+    , 0, NULL, NULL }
+
+
 /* BatteryAgeingInfo methods */
 void   battery_ageing_info__init
                      (BatteryAgeingInfo         *message);
@@ -210,6 +245,44 @@ UploadInfo *
 void   upload_info__free_unpacked
                      (UploadInfo *message,
                       ProtobufCAllocator *allocator);
+/* DischargeSetting methods */
+void   discharge_setting__init
+                     (DischargeSetting         *message);
+size_t discharge_setting__get_packed_size
+                     (const DischargeSetting   *message);
+size_t discharge_setting__pack
+                     (const DischargeSetting   *message,
+                      uint8_t             *out);
+size_t discharge_setting__pack_to_buffer
+                     (const DischargeSetting   *message,
+                      ProtobufCBuffer     *buffer);
+DischargeSetting *
+       discharge_setting__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   discharge_setting__free_unpacked
+                     (DischargeSetting *message,
+                      ProtobufCAllocator *allocator);
+/* MSGBODY methods */
+void   msg__body__init
+                     (MSGBODY         *message);
+size_t msg__body__get_packed_size
+                     (const MSGBODY   *message);
+size_t msg__body__pack
+                     (const MSGBODY   *message,
+                      uint8_t             *out);
+size_t msg__body__pack_to_buffer
+                     (const MSGBODY   *message,
+                      ProtobufCBuffer     *buffer);
+MSGBODY *
+       msg__body__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   msg__body__free_unpacked
+                     (MSGBODY *message,
+                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*BatteryAgeingInfo_Closure)
@@ -217,6 +290,12 @@ typedef void (*BatteryAgeingInfo_Closure)
                   void *closure_data);
 typedef void (*UploadInfo_Closure)
                  (const UploadInfo *message,
+                  void *closure_data);
+typedef void (*DischargeSetting_Closure)
+                 (const DischargeSetting *message,
+                  void *closure_data);
+typedef void (*MSGBODY_Closure)
+                 (const MSGBODY *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -227,8 +306,12 @@ typedef void (*UploadInfo_Closure)
 extern const ProtobufCEnumDescriptor    heart__beat__battery__code__descriptor;
 extern const ProtobufCEnumDescriptor    charge__status__descriptor;
 extern const ProtobufCEnumDescriptor    enable__borrow__status__descriptor;
+extern const ProtobufCEnumDescriptor    discharge__cmd__descriptor;
+extern const ProtobufCEnumDescriptor    msg__type__descriptor;
 extern const ProtobufCMessageDescriptor battery_ageing_info__descriptor;
 extern const ProtobufCMessageDescriptor upload_info__descriptor;
+extern const ProtobufCMessageDescriptor discharge_setting__descriptor;
+extern const ProtobufCMessageDescriptor msg__body__descriptor;
 
 PROTOBUF_C__END_DECLS
 

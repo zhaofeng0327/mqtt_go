@@ -93,6 +93,92 @@ void   upload_info__free_unpacked
   assert(message->base.descriptor == &upload_info__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   discharge_setting__init
+                     (DischargeSetting         *message)
+{
+  static DischargeSetting init_value = DISCHARGE_SETTING__INIT;
+  *message = init_value;
+}
+size_t discharge_setting__get_packed_size
+                     (const DischargeSetting *message)
+{
+  assert(message->base.descriptor == &discharge_setting__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t discharge_setting__pack
+                     (const DischargeSetting *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &discharge_setting__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t discharge_setting__pack_to_buffer
+                     (const DischargeSetting *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &discharge_setting__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+DischargeSetting *
+       discharge_setting__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (DischargeSetting *)
+     protobuf_c_message_unpack (&discharge_setting__descriptor,
+                                allocator, len, data);
+}
+void   discharge_setting__free_unpacked
+                     (DischargeSetting *message,
+                      ProtobufCAllocator *allocator)
+{
+  assert(message->base.descriptor == &discharge_setting__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   msg__body__init
+                     (MSGBODY         *message)
+{
+  static MSGBODY init_value = MSG__BODY__INIT;
+  *message = init_value;
+}
+size_t msg__body__get_packed_size
+                     (const MSGBODY *message)
+{
+  assert(message->base.descriptor == &msg__body__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t msg__body__pack
+                     (const MSGBODY *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &msg__body__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t msg__body__pack_to_buffer
+                     (const MSGBODY *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &msg__body__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+MSGBODY *
+       msg__body__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (MSGBODY *)
+     protobuf_c_message_unpack (&msg__body__descriptor,
+                                allocator, len, data);
+}
+void   msg__body__free_unpacked
+                     (MSGBODY *message,
+                      ProtobufCAllocator *allocator)
+{
+  assert(message->base.descriptor == &msg__body__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 static const ProtobufCFieldDescriptor battery_ageing_info__field_descriptors[23] =
 {
   {
@@ -455,6 +541,121 @@ const ProtobufCMessageDescriptor upload_info__descriptor =
   (ProtobufCMessageInit) upload_info__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
+static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[2] =
+{
+  {
+    "cmd",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(DischargeSetting, cmd),
+    &discharge__cmd__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "level",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(DischargeSetting, level),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned discharge_setting__field_indices_by_name[] = {
+  0,   /* field[0] = cmd */
+  1,   /* field[1] = level */
+};
+static const ProtobufCIntRange discharge_setting__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor discharge_setting__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "DischargeSetting",
+  "DischargeSetting",
+  "DischargeSetting",
+  "",
+  sizeof(DischargeSetting),
+  2,
+  discharge_setting__field_descriptors,
+  discharge_setting__field_indices_by_name,
+  1,  discharge_setting__number_ranges,
+  (ProtobufCMessageInit) discharge_setting__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor msg__body__field_descriptors[3] =
+{
+  {
+    "type",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(MSGBODY, type),
+    &msg__type__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "up_info",
+    2,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MSGBODY, up_info),
+    &upload_info__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "dis_setting",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MSGBODY, dis_setting),
+    &discharge_setting__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned msg__body__field_indices_by_name[] = {
+  2,   /* field[2] = dis_setting */
+  0,   /* field[0] = type */
+  1,   /* field[1] = up_info */
+};
+static const ProtobufCIntRange msg__body__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 3 }
+};
+const ProtobufCMessageDescriptor msg__body__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "MSG_BODY",
+  "MSGBODY",
+  "MSGBODY",
+  "",
+  sizeof(MSGBODY),
+  3,
+  msg__body__field_descriptors,
+  msg__body__field_indices_by_name,
+  1,  msg__body__number_ranges,
+  (ProtobufCMessageInit) msg__body__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
 static const ProtobufCEnumValue heart__beat__battery__code__enum_values_by_number[10] =
 {
   { "HBB_STATUS_OK", "HEART__BEAT__BATTERY__CODE__HBB_STATUS_OK", 0 },
@@ -555,5 +756,61 @@ const ProtobufCEnumDescriptor enable__borrow__status__descriptor =
   enable__borrow__status__enum_values_by_name,
   1,
   enable__borrow__status__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCEnumValue discharge__cmd__enum_values_by_number[2] =
+{
+  { "START_DISCHARGE", "DISCHARGE__CMD__START_DISCHARGE", 1 },
+  { "STOP_DISCHARGE", "DISCHARGE__CMD__STOP_DISCHARGE", 2 },
+};
+static const ProtobufCIntRange discharge__cmd__value_ranges[] = {
+{1, 0},{0, 2}
+};
+static const ProtobufCEnumValueIndex discharge__cmd__enum_values_by_name[2] =
+{
+  { "START_DISCHARGE", 0 },
+  { "STOP_DISCHARGE", 1 },
+};
+const ProtobufCEnumDescriptor discharge__cmd__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "DISCHARGE_CMD",
+  "DISCHARGE_CMD",
+  "DISCHARGECMD",
+  "",
+  2,
+  discharge__cmd__enum_values_by_number,
+  2,
+  discharge__cmd__enum_values_by_name,
+  1,
+  discharge__cmd__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCEnumValue msg__type__enum_values_by_number[2] =
+{
+  { "UPLOAD_INFO", "MSG__TYPE__UPLOAD_INFO", 1 },
+  { "DISCHARGE_SETTING", "MSG__TYPE__DISCHARGE_SETTING", 2 },
+};
+static const ProtobufCIntRange msg__type__value_ranges[] = {
+{1, 0},{0, 2}
+};
+static const ProtobufCEnumValueIndex msg__type__enum_values_by_name[2] =
+{
+  { "DISCHARGE_SETTING", 1 },
+  { "UPLOAD_INFO", 0 },
+};
+const ProtobufCEnumDescriptor msg__type__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "MSG_TYPE",
+  "MSG_TYPE",
+  "MSGTYPE",
+  "",
+  2,
+  msg__type__enum_values_by_number,
+  2,
+  msg__type__enum_values_by_name,
+  1,
+  msg__type__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
 };

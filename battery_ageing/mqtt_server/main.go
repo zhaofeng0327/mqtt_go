@@ -9,28 +9,46 @@ import (
 	"github.com/golang/protobuf/proto"
 	"log"
 	"os"
-	//"strings"
+	"strings"
 	"time"
 )
 
 var db *db_mysql.MysqlDB
 var c mqtt.Client
 
+const TOPIC_CTS = "CTS/#"
+const TOPIC_STC = "STC/#"
+const TOPIC_CTS_TYPE = "CTS"
+
 var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
-/*
+
 	topic := msg.Topic()
 	i := strings.Index(topic, "/")
 	topic1 := topic[:i]
-	deviceid := topic[i+1:]
-*/
+	//topic2 := topic[i+1:]
+	fmt.Println("recv topic : ", topic)
+
+	if (topic1 != TOPIC_CTS_TYPE) {
+		fmt.Println("topic not wanted")
+		return
+	}
+
 	data := msg.Payload()
-	cmsg := &battery_ageing.UploadInfo{}
+	cmsg := &battery_ageing.MSG_BODY{}
 
 	err := proto.Unmarshal(data, cmsg)
 	if err != nil {
 		fmt.Println("unmarshaling error: ", err)
 	} else {
-        a := cmsg.GetBatteryAgeingInfo();
+
+		if (battery_ageing.MSG_TYPE_UPLOAD_INFO != cmsg.GetType()) {
+			fmt.Println("msg type not wanted")
+			return
+		}
+
+
+        up := cmsg.GetUpInfo();
+		a := up.GetBatteryAgeingInfo();
         l := len(a);
         fmt.Println("cnt ", l);
 
@@ -170,13 +188,14 @@ func connMqttServer() {
 		time.Sleep(5 * time.Second)
 	}
 
-	if token := c.Subscribe("REQ/#", 0, nil); token.Wait() && token.Error() != nil {
+	if token := c.Subscribe(TOPIC_CTS, 0, nil); token.Wait() && token.Error() != nil {
 		fmt.Println(token.Error())
 	}
-
-	if token := c.Subscribe("RES/#", 0, nil); token.Wait() && token.Error() != nil {
+/*
+	if token := c.Subscribe(TOPIC_STC, 0, nil); token.Wait() && token.Error() != nil {
 		fmt.Println(token.Error())
 	}
+*/
 }
 
 func main() {
