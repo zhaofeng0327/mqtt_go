@@ -99,11 +99,18 @@ func main() {
         fmt.Printf("strconv to int err", err);
         return
     }
+    slot_num := int32(i64)
+
+    i64, err = strconv.ParseInt(os.Args[2], 10, 32)
+    if err != nil {
+        fmt.Printf("strconv to int err", err);
+        return
+    }
     var cmd battery_ageing.DISCHARGE_CMD
     //i32 := int32(i64)
     cmd = battery_ageing.DISCHARGE_CMD(i64)
 
-    i64, err = strconv.ParseInt(os.Args[2], 10, 32)
+    i64, err = strconv.ParseInt(os.Args[3], 10, 32)
     if err != nil {
         fmt.Printf("strconv2 to int err", err);
         return
@@ -114,6 +121,7 @@ func main() {
 	var b []byte;
 	
 	setting := &battery_ageing.DischargeSetting {
+        proto.Int32(slot_num),
 		&cmd,
 		proto.Int32(level),
 		q,

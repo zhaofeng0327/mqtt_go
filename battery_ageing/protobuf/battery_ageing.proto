@@ -63,8 +63,9 @@ enum DISCHARGE_CMD {
 }
 
 message DischargeSetting {
-  required DISCHARGE_CMD cmd=1;
-  required int32 level=2;
+  required int32 slot_num=1;
+  required DISCHARGE_CMD cmd=2;
+  required int32 level=3;
 }
 
 enum MSG_TYPE {
