@@ -10,6 +10,7 @@ import (
 	"os"
 	//"strings"
 	"time"
+    "strconv"
 )
 
 var db *db_mysql.MysqlDB
@@ -93,13 +94,28 @@ func main() {
 		return
 	}
 
-	cmd := battery_ageing.DISCHARGE_CMD_START_DISCHARGE
+    i64, err := strconv.ParseInt(os.Args[1], 10, 32)
+    if err != nil {
+        fmt.Printf("strconv to int err", err);
+        return
+    }
+    var cmd battery_ageing.DISCHARGE_CMD
+    //i32 := int32(i64)
+    cmd = battery_ageing.DISCHARGE_CMD(i64)
+
+    i64, err = strconv.ParseInt(os.Args[2], 10, 32)
+    if err != nil {
+        fmt.Printf("strconv2 to int err", err);
+        return
+    }
+    level := int32(i64)
+
 	var q struct{};
 	var b []byte;
 	
 	setting := &battery_ageing.DischargeSetting {
 		&cmd,
-		proto.Int32(1),
+		proto.Int32(level),
 		q,
 		b,
 		0,
