@@ -62,10 +62,10 @@ func connMqttServer() int32{
 func main() {
 
 	config := db_mysql.MySQLConfig{
-		"root",
-		"password",
-		"127.0.0.1",
-		3306,
+		db_mysql.DATABASE_USER,
+		db_mysql.DATABASE_PASSWORD,
+		db_mysql.DATABASE_ADDR,
+		db_mysql.DATABASE_PORT,
 		"",
 	}
 
@@ -94,14 +94,16 @@ func main() {
 		return
 	}
 
-    i64, err := strconv.ParseInt(os.Args[1], 10, 32)
+    machine_id := os.Args[1]
+
+    i64, err := strconv.ParseInt(os.Args[2], 10, 32)
     if err != nil {
         fmt.Printf("strconv to int err", err);
         return
     }
     slot_num := int32(i64)
 
-    i64, err = strconv.ParseInt(os.Args[2], 10, 32)
+    i64, err = strconv.ParseInt(os.Args[3], 10, 32)
     if err != nil {
         fmt.Printf("strconv to int err", err);
         return
@@ -110,7 +112,7 @@ func main() {
     //i32 := int32(i64)
     cmd = battery_ageing.DISCHARGE_CMD(i64)
 
-    i64, err = strconv.ParseInt(os.Args[3], 10, 32)
+    i64, err = strconv.ParseInt(os.Args[4], 10, 32)
     if err != nil {
         fmt.Printf("strconv2 to int err", err);
         return
@@ -119,16 +121,17 @@ func main() {
 
 	var q struct{};
 	var b []byte;
-	
+
 	setting := &battery_ageing.DischargeSetting {
-        proto.Int32(slot_num),
+		&machine_id,
+		proto.Int32(slot_num),
 		&cmd,
 		proto.Int32(level),
 		q,
 		b,
 		0,
 	}
-	
+
 	msg_type := battery_ageing.MSG_TYPE_DISCHARGE_SETTING
 	msg_body := &battery_ageing.MSG_BODY {
 		Type: &msg_type,
@@ -139,10 +142,10 @@ func main() {
 		if err != nil {
 			fmt.Println("marshaling error: ", err)
 	}
-	
+
 	token := c.Publish(TOPIC_STC_CHARGE_SETTING, 0, false, data)
 			token.Wait()
-	
+
 
 	c.Disconnect(250)
 }

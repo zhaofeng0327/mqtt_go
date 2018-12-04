@@ -541,11 +541,23 @@ const ProtobufCMessageDescriptor upload_info__descriptor =
   (ProtobufCMessageInit) upload_info__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[3] =
+static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[4] =
 {
   {
-    "slot_num",
+    "machine_id",
     1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(DischargeSetting, machine_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "slot_num",
+    2,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
@@ -557,7 +569,7 @@ static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[3] =
   },
   {
     "cmd",
-    2,
+    3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
@@ -569,7 +581,7 @@ static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[3] =
   },
   {
     "level",
-    3,
+    4,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
@@ -581,14 +593,15 @@ static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[3] =
   },
 };
 static const unsigned discharge_setting__field_indices_by_name[] = {
-  1,   /* field[1] = cmd */
-  2,   /* field[2] = level */
-  0,   /* field[0] = slot_num */
+  2,   /* field[2] = cmd */
+  3,   /* field[3] = level */
+  0,   /* field[0] = machine_id */
+  1,   /* field[1] = slot_num */
 };
 static const ProtobufCIntRange discharge_setting__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 3 }
+  { 0, 4 }
 };
 const ProtobufCMessageDescriptor discharge_setting__descriptor =
 {
@@ -598,7 +611,7 @@ const ProtobufCMessageDescriptor discharge_setting__descriptor =
   "DischargeSetting",
   "",
   sizeof(DischargeSetting),
-  3,
+  4,
   discharge_setting__field_descriptors,
   discharge_setting__field_indices_by_name,
   1,  discharge_setting__number_ranges,

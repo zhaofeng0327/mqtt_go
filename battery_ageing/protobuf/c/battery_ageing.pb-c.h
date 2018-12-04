@@ -187,13 +187,14 @@ struct  _UploadInfo
 struct  _DischargeSetting
 {
   ProtobufCMessage base;
+  char *machine_id;
   int32_t slot_num;
   DISCHARGECMD cmd;
   int32_t level;
 };
 #define DISCHARGE_SETTING__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&discharge_setting__descriptor) \
-    , 0, 0, 0 }
+    , NULL, 0, 0, 0 }
 
 
 struct  _MSGBODY
