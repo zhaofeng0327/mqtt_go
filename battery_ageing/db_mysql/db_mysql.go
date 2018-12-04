@@ -10,6 +10,10 @@ import (
 )
 
 const DATABASE_NAME = "battery_ageing"
+const DATABASE_USER = "phpmyadmin"
+const DATABASE_PASSWORD = "PHP@password123"
+const DATABASE_ADDR = "127.0.0.1"
+const DATABASE_PORT = 3306
 
 type MysqlDB struct {
 	conn *sql.DB

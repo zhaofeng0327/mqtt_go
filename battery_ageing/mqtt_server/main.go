@@ -205,13 +205,14 @@ func connMqttServer() {
 */
 }
 
+
 func main() {
 
 	config := db_mysql.MySQLConfig{
-		"root",
-		"password",
-		"127.0.0.1",
-		3306,
+		db_mysql.DATABASE_USER,
+		db_mysql.DATABASE_PASSWORD,
+		db_mysql.DATABASE_ADDR,
+		db_mysql.DATABASE_PORT,
 		"",
 	}
 
