@@ -63,10 +63,9 @@ enum DISCHARGE_CMD {
 }
 
 message DischargeSetting {
-  required string machine_id=1;
-  required int32 slot_num=2;
-  required DISCHARGE_CMD cmd=3;
-  required int32 level=4;
+  required int32 slot_num=1;
+  required DISCHARGE_CMD cmd=2;
+  required int32 level=3;
 }
 
 enum MSG_TYPE {
@@ -76,6 +75,7 @@ enum MSG_TYPE {
 
 message MSG_BODY {
   required MSG_TYPE type=1;
-  optional UploadInfo up_info=2;
-  optional DischargeSetting dis_setting=3;
+  required string device_sn=2;
+  optional UploadInfo up_info=3;
+  optional DischargeSetting dis_setting=4;
 }

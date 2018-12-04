@@ -53,9 +53,24 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
 			return
 		}
 
+        dev_sn := cmsg.GetDeviceSn();
+        if (10 != len(dev_sn)) {
+            fmt.Println("device sn len err \n", dev_sn)
+            return
+        }
 
         up := cmsg.GetUpInfo();
+        if (up == nil) {
+            fmt.Println("get upload info err\n")
+            return
+        }
+
 		a := up.GetBatteryAgeingInfo();
+        if (a == nil) {
+            fmt.Println("get battery ageing info err\n")
+            return
+        }
+
         l := len(a);
         fmt.Println("cnt ", l);
 
@@ -138,9 +153,16 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
             };
 
 			//save to mysql
+            config := db_mysql.MySQLConfig{
+                db_mysql.DATABASE_USER,
+                db_mysql.DATABASE_PASSWORD,
+                db_mysql.DATABASE_ADDR,
+                db_mysql.DATABASE_PORT,
+                "",
+            }
 			t := time.Now().Local()
-			table_name := "battery_ageing" + t.Format("20060102")
-			id, err := db.InsertMqttMsg(table_name, &msg)
+			table_name := dev_sn + t.Format("20060102")
+			id, err := db.InsertMqttMsg(config, table_name, &msg)
 			if err != nil {
 				fmt.Printf("insert id %d err\n",id)
 			} else {

@@ -94,7 +94,7 @@ func main() {
 		return
 	}
 
-    machine_id := os.Args[1]
+    dev_sn := os.Args[1]
 
     i64, err := strconv.ParseInt(os.Args[2], 10, 32)
     if err != nil {
@@ -123,7 +123,6 @@ func main() {
 	var b []byte;
 
 	setting := &battery_ageing.DischargeSetting {
-		&machine_id,
 		proto.Int32(slot_num),
 		&cmd,
 		proto.Int32(level),
@@ -135,6 +134,7 @@ func main() {
 	msg_type := battery_ageing.MSG_TYPE_DISCHARGE_SETTING
 	msg_body := &battery_ageing.MSG_BODY {
 		Type: &msg_type,
+        DeviceSn : &dev_sn,
 		DisSetting : setting,
 	}
 

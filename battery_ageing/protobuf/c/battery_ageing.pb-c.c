@@ -541,23 +541,11 @@ const ProtobufCMessageDescriptor upload_info__descriptor =
   (ProtobufCMessageInit) upload_info__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[4] =
+static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[3] =
 {
   {
-    "machine_id",
-    1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_STRING,
-    0,   /* quantifier_offset */
-    offsetof(DischargeSetting, machine_id),
-    NULL,
-    NULL,
-    0,             /* flags */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-  {
     "slot_num",
-    2,
+    1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
@@ -569,7 +557,7 @@ static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[4] =
   },
   {
     "cmd",
-    3,
+    2,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
@@ -581,7 +569,7 @@ static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[4] =
   },
   {
     "level",
-    4,
+    3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
@@ -593,15 +581,14 @@ static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[4] =
   },
 };
 static const unsigned discharge_setting__field_indices_by_name[] = {
-  2,   /* field[2] = cmd */
-  3,   /* field[3] = level */
-  0,   /* field[0] = machine_id */
-  1,   /* field[1] = slot_num */
+  1,   /* field[1] = cmd */
+  2,   /* field[2] = level */
+  0,   /* field[0] = slot_num */
 };
 static const ProtobufCIntRange discharge_setting__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 4 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor discharge_setting__descriptor =
 {
@@ -611,14 +598,14 @@ const ProtobufCMessageDescriptor discharge_setting__descriptor =
   "DischargeSetting",
   "",
   sizeof(DischargeSetting),
-  4,
+  3,
   discharge_setting__field_descriptors,
   discharge_setting__field_indices_by_name,
   1,  discharge_setting__number_ranges,
   (ProtobufCMessageInit) discharge_setting__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor msg__body__field_descriptors[3] =
+static const ProtobufCFieldDescriptor msg__body__field_descriptors[4] =
 {
   {
     "type",
@@ -633,8 +620,20 @@ static const ProtobufCFieldDescriptor msg__body__field_descriptors[3] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "up_info",
+    "device_sn",
     2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(MSGBODY, device_sn),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "up_info",
+    3,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
@@ -646,7 +645,7 @@ static const ProtobufCFieldDescriptor msg__body__field_descriptors[3] =
   },
   {
     "dis_setting",
-    3,
+    4,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
@@ -658,14 +657,15 @@ static const ProtobufCFieldDescriptor msg__body__field_descriptors[3] =
   },
 };
 static const unsigned msg__body__field_indices_by_name[] = {
-  2,   /* field[2] = dis_setting */
+  1,   /* field[1] = device_sn */
+  3,   /* field[3] = dis_setting */
   0,   /* field[0] = type */
-  1,   /* field[1] = up_info */
+  2,   /* field[2] = up_info */
 };
 static const ProtobufCIntRange msg__body__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 3 }
+  { 0, 4 }
 };
 const ProtobufCMessageDescriptor msg__body__descriptor =
 {
@@ -675,7 +675,7 @@ const ProtobufCMessageDescriptor msg__body__descriptor =
   "MSGBODY",
   "",
   sizeof(MSGBODY),
-  3,
+  4,
   msg__body__field_descriptors,
   msg__body__field_indices_by_name,
   1,  msg__body__number_ranges,

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
-	"time"
+	//"time"
 )
 
 const DATABASE_NAME = "battery_ageing"
@@ -78,7 +78,7 @@ func (c MySQLConfig) dataStoreName(databaseName string) string {
 }
 
 // ensureTableExists checks the table exists. If not, it creates it.
-func (config MySQLConfig) ensureTableExists() error {
+func (config MySQLConfig) ensureTableExists(table_name string) error {
 	conn, err := sql.Open("mysql", config.dataStoreName(""))
 	if err != nil {
 		fmt.Println("could not get connection")
@@ -94,7 +94,6 @@ func (config MySQLConfig) ensureTableExists() error {
 			"could be bad address, or this address is not whitelisted for access.")
 	}
 
-	table_name := "battery_ageing" + time.Now().Local().Format("20060102")
 
 	if _, err := conn.Exec("USE " + DATABASE_NAME); err != nil {
 		// MySQL error 1049 is "database does not exist"
@@ -177,10 +176,6 @@ func execAffectingOneRow(stmt *sql.Stmt, args ...interface{}) (sql.Result, error
 
 // NewMySQLDB creates a new BookDatabase backed by a given MySQL server.
 func NewMySQLDB(config MySQLConfig) (*MysqlDB, error) {
-	// Check database and table exists. If not, create it.
-	if err := config.ensureTableExists(); err != nil {
-		return nil, err
-	}
 
 	conn, err := sql.Open("mysql", config.dataStoreName(DATABASE_NAME))
 	if err != nil {
@@ -363,7 +358,13 @@ func (db *MysqlDB) GetMqttMsgById(table_name string, id int64) (*MqttMsg, error)
 }
 
 
-func (db *MysqlDB) InsertMqttMsg(table_name string, msg *MqttMsg) (id int64, err error) {
+func (db *MysqlDB) InsertMqttMsg(config MySQLConfig, table_name string, msg *MqttMsg) (id int64, err error) {
+
+	// Check database and table exists. If not, create it.
+	if err := config.ensureTableExists(table_name); err != nil {
+		return 0, fmt.Errorf("table %v not exist %v", table_name, err)
+	}
+
 	stmt, err := db.conn.Prepare("INSERT INTO " + table_name + " (" +
 	"timestamp           , " +
 	"batterysn           , " +
