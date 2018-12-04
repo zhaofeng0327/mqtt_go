@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+
+<style>
+
+.item1 { grid-area: header; }
+.item2 { grid-area: menu; }
+.item3 { grid-area: main; }
+.item4 { grid-area: right; }
+.item5 { grid-area: footer; }
+
+.grid-container {
+display: grid;
+	 grid-template:
+		 'header header header header header header'
+		 'menu main main main main right'
+		 'footer footer footer footer footer footer';
+	 grid-gap: 10px;
+	 background-color: #2196F3;
+padding: 10px;
+}
+
+
+
+.grid-container>div {
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+padding:20px 0;
+	font-size: 30px;
+}
+
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="grid-container">
+
+<div class="item1">
+<h1>街电电池老化系统</h1>
+</div>
+
+<div class="item2"></div>
+<div class="item3">  
+
+<form action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
+
+<h3 >卡槽号</h3>
+
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "1" checked />
+    1
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "2"/>
+    2
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "3"/>
+    3
+  </label>
+
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "4"/>
+    4
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "5"/>
+    5
+  </label>
+
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "6"/>
+    6
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="slot_num" value = "0"/>
+    全部
+  </label>
+<br><br>
+
+
+<h3 >放电电流</h3>
+  <label>
+    <input type="radio" class="option-input radio" name="current_level" value = "0"/>
+    低
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="current_level" value = "1"/>
+    中
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="current_level" value = "2"/>
+    高
+  </label>
+
+<br><br>
+
+<h3 >操作</h3>
+  <label>
+    <input type="radio" class="option-input radio" name="option" value = "0"/>
+    开始放电
+  </label>
+  <label>
+    <input type="radio" class="option-input radio" name="option" value = "1"/>
+    停止放电
+  </label>
+
+<br><br>
+<input type = "submit" style = "margin:20px;" value = "提交" class = "button">
+</form>
+</div>
+
+<div class="item4"></div>
+
+<div class="item5">
+<iframe name="formDestination" width="1000" height="40" align = center></iframe>
+</div>
+
+
+</div>
+
+</body>
+</html>

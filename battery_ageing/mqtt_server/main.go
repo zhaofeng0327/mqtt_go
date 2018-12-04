@@ -218,7 +218,7 @@ func main() {
 
 	dbt, err := db_mysql.NewMySQLDB(config)
 	if err != nil {
-		fmt.Println("mysql database init error")
+		fmt.Println("mysql database init error :", err)
 		os.Exit(1)
 	} else {
 		db = dbt
