@@ -161,7 +161,7 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
                 "",
             }
 			t := time.Now().Local()
-			table_name := dev_sn + t.Format("20060102")
+			table_name := dev_sn + "_" + t.Format("20060102")
 			id, err := db.InsertMqttMsg(config, table_name, &msg)
 			if err != nil {
 				fmt.Printf("insert id %d err\n",id)
