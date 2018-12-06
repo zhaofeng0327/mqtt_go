@@ -46,6 +46,16 @@ padding:20px 0;
     cursor: pointer;
 }
 
+input[type=text] {
+  width: 25%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  background-color: #3CBC8D;
+  color: white;
+  font-size:24px;
+}
 </style>
 </head>
 
@@ -63,8 +73,8 @@ padding:20px 0;
 
 <form action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
 
-<h3 >柜机SN</h3>
-  <textarea name = "machine_id" cols = 20 rows = 1></textarea>
+  <label for="fname">柜机SN</label> 
+  <input type="text" id="fname" name="device_sn"> 
 
 <h3 >卡槽号</h3>
 
