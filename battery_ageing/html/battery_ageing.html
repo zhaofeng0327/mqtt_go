@@ -63,6 +63,9 @@ padding:20px 0;
 
 <form action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
 
+<h3 >柜机SN</h3>
+  <textarea name = "machine_id" cols = 20 rows = 1></textarea>
+
 <h3 >卡槽号</h3>
 
   <label>
@@ -116,11 +119,11 @@ padding:20px 0;
 
 <h3 >操作</h3>
   <label>
-    <input type="radio" class="option-input radio" name="option" value = "0"/>
+    <input type="radio" class="option-input radio" name="option" value = "1"/>
     开始放电
   </label>
   <label>
-    <input type="radio" class="option-input radio" name="option" value = "1"/>
+    <input type="radio" class="option-input radio" name="option" value = "2"/>
     停止放电
   </label>
 
