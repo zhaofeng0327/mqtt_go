@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="5">
   <link rel="stylesheet" href="css/style.css">
 
 <style>
@@ -27,6 +28,7 @@ padding: 10px;
 
 
 .grid-container>div {
+	text-color: #000000;
 	background-color: rgba(255, 255, 255, 0.8);
 	text-align: center;
         padding:20px 0;
@@ -62,6 +64,22 @@ input[type="radio"] {
   margin-left: 50px;
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
 </style>
 </head>
 
@@ -69,19 +87,97 @@ input[type="radio"] {
 <body>
 
 <div class="grid-container">
-
-<div class="item1">
-<h1>街电电池老化系统</h1>
-</div>
-
-<div class="item2"></div>
-
 <div class="item3">  
+
+<script>
+    $(document).ready(function(){
+      if(localStorage.selected) {
+        $('#' + localStorage.selected ).attr('checked', true);
+      }
+      $('.option-input').click(function(){
+        localStorage.setItem("selected", this.id);
+      });
+    });
+
+</script>
+
+<?php
+	$servername = "localhost";
+	$username = "phpmyadmin";
+	$password = "PHP@password123";
+	$dbname = "battery_ageing";
+
+	$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+	if (!$conn) {
+	    die("Connection failed: " . mysqli_connect_error());
+	}
+
+	$sql = "SHOW TABLES";
+	$result = mysqli_query($conn, $sql);
+
+	$tables = array();
+	if (mysqli_num_rows($result) > 0) {
+		while ($row = mysqli_fetch_row($result)) {
+			if (strpos($row[0], $_GET["battery_sn"]) === 0) {
+					$tables[] = $row[0];
+			}
+		}
+	}
+
+	if (count($tables) === 0) {
+		mysqli_close($conn);
+		die("no tables found");
+	}
+
+	rsort($tables);
+
+	echo "<table>";
+	echo "<tr>";
+	echo "<th>时间</th>";
+	echo "<th>卡槽ID</th>";
+	echo "<th>电池SN</th>";
+	echo "<th>外部电压</th>";
+	echo "<th>放电电流</th>";
+	echo "<th>温度</th>";
+	echo "<th>放电累计</th>";
+	echo "<th>剩余电量</th>";
+	echo "</tr>";
+
+	for ($x = 0; $x < 6; $x++) {
+		$sql = "SELECT * FROM $tables[0] where slotnum=$x order by timestamp DESC limit 1";
+		$result = mysqli_query($conn, $sql);
+
+		if (mysqli_num_rows($result) > 0) {
+			// output data of each row
+			while($row = mysqli_fetch_assoc($result)) {
+				echo "<tr>";
+				echo "<td>" . $row["timestamp"] . "</td>";
+				echo "<td>" . $row["slotnum"] . "</td>";
+				echo "<td>" . $row["batterysn"] . "</td>";
+				echo "<td>" . $row["voltage"] . "</td>";
+				echo "<td>" . $row["current"] . "</td>";
+				echo "<td>" . $row["temprature"] . "</td>";
+				echo "<td>" . $row["elapsed"] . "</td>";
+				echo "<td>" . $row["xradio"] . "</td>";
+				echo "</tr>";
+			}
+		} else {
+			//	echo "0 results";
+		}
+	}
+	echo "</table><br>";
+
+
+	mysqli_close($conn);
+
+?>
+
 
 <form action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
 
-    <label for="fname">柜机SN</label>
-    <input type="text" id="fname" name="device_sn">
+    <label for="fname">柜机SN</label> 
+    <input type="text" id="sn" name="device_sn" readonly value="<?php echo htmlentities($_GET["battery_sn"]); ?>"/> 
 
     <h3 >卡槽号</h3>
 
@@ -120,10 +216,8 @@ input[type="radio"] {
 </form>
 </div>
 
-<div class="item4"></div>
-
 <div class="item5">
-<iframe name="formDestination" width="1000" height="40" align = center></iframe>
+<iframe name="formDestination" width="1000" height="40" align = center frameborder= no></iframe>
 </div>
 
 
