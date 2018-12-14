@@ -89,18 +89,6 @@ th {
 <div class="grid-container">
 <div class="item3">  
 
-<script>
-    $(document).ready(function(){
-      if(localStorage.selected) {
-        $('#' + localStorage.selected ).attr('checked', true);
-      }
-      $('.option-input').click(function(){
-        localStorage.setItem("selected", this.id);
-      });
-    });
-
-</script>
-
 <?php
 	$servername = "localhost";
 	$username = "phpmyadmin";
@@ -119,7 +107,7 @@ th {
 	$tables = array();
 	if (mysqli_num_rows($result) > 0) {
 		while ($row = mysqli_fetch_row($result)) {
-			if (strpos($row[0], $_GET["battery_sn"]) === 0) {
+			if (strpos($row[0], $_GET["device_sn"]) === 0) {
 					$tables[] = $row[0];
 			}
 		}
@@ -174,41 +162,74 @@ th {
 ?>
 
 
-<form action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
+<form name = form1 action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
 
     <label for="fname">柜机SN</label> 
-    <input type="text" id="sn" name="device_sn" readonly value="<?php echo htmlentities($_GET["battery_sn"]); ?>"/> 
+    <input type="text" id="sn" name="device_sn" readonly value="<?php echo htmlentities($_GET["device_sn"]); ?>"/> 
+
+	<script>
+	function reload() {
+		var v_sn = document.form1.sn.value;
+		var v_slot_num = "1";
+		var v_current_level = "0";
+		var v_option = "1";
+
+		for(var i = 0; i < document.form1.slot_num.length; i++) {
+			if(document.form1.slot_num[i].checked) {
+				v_slot_num = document.form1.slot_num[i].value; 
+				break;
+			}
+		}
+
+		for(var i = 0; i < document.form1.current_level.length; i++) {
+			if(document.form1.current_level[i].checked) {
+				v_current_level = document.form1.current_level[i].value; 
+				break;
+			}
+		}
+
+		for(var i = 0; i < document.form1.option.length; i++) {
+			if(document.form1.option[i].checked) {
+				v_option = document.form1.option[i].value; 
+				break;
+			}
+		}
+
+		self.location=window.location.pathname + '?device_sn=' + v_sn + '&slot_num=' + v_slot_num + '&current_level=' + v_current_level + '&option=' + v_option;
+	}
+	</script>
+
 
     <h3 >卡槽号</h3>
 
-    <input type="radio" class="option-input radio" name="slot_num" value = "1" checked />1
-    <input type="radio" class="option-input radio" name="slot_num" value = "2"/>2
-    <input type="radio" class="option-input radio" name="slot_num" value = "3"/>3
+    <input type="radio" class="option-input radio" name="slot_num" value = "1" onclick="reload()" <?php echo $_GET['slot_num'] == "1" ? "checked" : "";?>/> 1
+    <input type="radio" class="option-input radio" name="slot_num" value = "2" onclick="reload()" <?php echo $_GET['slot_num'] == "2" ? "checked" : "";?>/> 2
+    <input type="radio" class="option-input radio" name="slot_num" value = "3" onclick="reload()" <?php echo $_GET['slot_num'] == "3" ? "checked" : "";?>/> 3
     <br> <br>
 
-    <input type="radio" class="option-input radio" name="slot_num" value = "4"/>4
-    <input type="radio" class="option-input radio" name="slot_num" value = "5"/>5
-    <input type="radio" class="option-input radio" name="slot_num" value = "6"/> 6
+    <input type="radio" class="option-input radio" name="slot_num" value = "4" onclick="reload()" <?php echo $_GET['slot_num'] == "4" ? "checked" : "";?>/> 4
+    <input type="radio" class="option-input radio" name="slot_num" value = "5" onclick="reload()" <?php echo $_GET['slot_num'] == "5" ? "checked" : "";?>/> 5
+    <input type="radio" class="option-input radio" name="slot_num" value = "6" onclick="reload()" <?php echo $_GET['slot_num'] == "6" ? "checked" : "";?>/> 6
     <br><br>
 
     <!-- input type="radio" class="option-input radio" name="slot_num" value = "0"/ 全部-->
 
     <h3 >放电电流</h3>
 
-    <input type="radio" class="option-input radio" name="current_level" value = "0" checked/> 低
-    <input type="radio" class="option-input radio" name="current_level" value = "1"/> 中
-    <input type="radio" class="option-input radio" name="current_level" value = "2"/> 高
+    <input type="radio" class="option-input radio" name="current_level" value = "0" onclick="reload()" <?php echo $_GET['current_level'] == "0" ? "checked" : "";?>/> 低
+    <input type="radio" class="option-input radio" name="current_level" value = "1" onclick="reload()" <?php echo $_GET['current_level'] == "1" ? "checked" : "";?>/> 中
+    <input type="radio" class="option-input radio" name="current_level" value = "2" onclick="reload()" <?php echo $_GET['current_level'] == "2" ? "checked" : "";?>/> 高
 
     <br><br>
 
     <h3 >操作</h3>
 
     <label>
-    <input type="radio" class="option-input radio" name="option" value = "1" checked/> 开始放电
+    <input type="radio" class="option-input radio" name="option" value = "1" onclick="reload()" <?php echo $_GET['option'] == "1" ? "checked" : "";?>/> 开始放电
     </label>
 
     <label>
-    <input type="radio" class="option-input radio" name="option" value = "2"/> 停止放电
+    <input type="radio" class="option-input radio" name="option" value = "2" onclick="reload()" <?php echo $_GET['option'] == "2" ? "checked" : "";?>/> 停止放电
     </label>
 
 <br><br>
