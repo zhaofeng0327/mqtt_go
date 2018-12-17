@@ -9,20 +9,19 @@
 <style>
 
 .item1 { grid-area: header; }
-.item2 { grid-area: menu; }
 .item3 { grid-area: main; }
-.item4 { grid-area: right; }
 .item5 { grid-area: footer; }
 
 .grid-container {
-display: grid;
-	 grid-template:
-		 'header header header header header header'
-		 'main main main main main main'
-		 'footer footer footer footer footer footer';
-	 grid-gap: 10px;
-	 background-color: #2196F3;
-padding: 10px;
+	display: grid;
+	grid-template:
+	 'header'
+	 'main'
+	 'footer';
+	grid-gap: 10px;
+	background-color: #2196F3;
+	width: 100vw;
+	padding: 10px;
 }
 
 
@@ -31,54 +30,56 @@ padding: 10px;
 	text-color: #000000;
 	background-color: rgba(255, 255, 255, 0.8);
 	text-align: center;
-        padding:20px 0;
+	padding: 20px 0;
 	font-size: 30px;
+	grid-column: 1;
+	justify-items: center;
 }
 
 .button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
 }
 
 input[type=text] {
-  width: 25%;
-  text-align: center;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: none;
-  background-color: #ADFF2F;
-  color: white;
-  font-size:24px;
+	width: 25%;
+	text-align: center;
+	padding: 12px 20px;
+	margin: 8px 0;
+	box-sizing: border-box;
+	border: none;
+	background-color: #ADFF2F;
+	color: white;
+	font-size:24px;
 }
 
 input[type="radio"] {
-  margin-left: 50px;
+	margin-left: 50px;
 }
 
 table {
-  border-collapse: collapse;
-  width: 100%;
+	border-collapse: collapse;
+	width: 100%;
 }
 
 th, td {
-  text-align: left;
-  padding: 8px;
+	text-align: left;
+	padding: 8px;
 }
 
 tr:nth-child(even){background-color: #f2f2f2}
 
 th {
-  background-color: #4CAF50;
-  color: white;
+	background-color: #4CAF50;
+	color: white;
 }
 </style>
 </head>
@@ -139,16 +140,20 @@ th {
 		if (mysqli_num_rows($result) > 0) {
 			// output data of each row
 			while($row = mysqli_fetch_assoc($result)) {
-				echo "<tr>";
-				echo "<td>" . $row["timestamp"] . "</td>";
-				echo "<td>" . $row["slotnum"] . "</td>";
-				echo "<td>" . $row["batterysn"] . "</td>";
-				echo "<td>" . $row["voltage"] . "</td>";
-				echo "<td>" . $row["current"] . "</td>";
-				echo "<td>" . $row["temprature"] . "</td>";
-				echo "<td>" . $row["elapsed"] . "</td>";
-				echo "<td>" . $row["xradio"] . "</td>";
-				echo "</tr>";
+				$t = strtotime($row["timestamp"]) + 8*3600;
+				if ($t + 120 >= time()) {
+					$d = gmdate("Y-m-d H:i:s", $t);
+					echo "<tr>";
+					echo "<td>" . $d . "</td>";
+					echo "<td>" . $row["slotnum"] . "</td>";
+					echo "<td>" . $row["batterysn"] . "</td>";
+					echo "<td>" . $row["voltage"] . "</td>";
+					echo "<td>" . $row["current"] . "</td>";
+					echo "<td>" . $row["temprature"] . "</td>";
+					echo "<td>" . $row["elapsed"] . "</td>";
+					echo "<td>" . $row["xradio"] . "</td>";
+					echo "</tr>";
+				}
 			}
 		} else {
 			//	echo "0 results";
@@ -164,8 +169,7 @@ th {
 
 <form name = form1 action = "/cgi-bin/battery_ageing.cgi" method = "POST" target="formDestination">
 
-    <label for="fname">柜机SN</label> 
-    <input type="text" id="sn" name="device_sn" readonly value="<?php echo htmlentities($_GET["device_sn"]); ?>"/> 
+    柜机SN <input type="text" id="sn" name="device_sn" readonly value="<?php echo htmlentities($_GET["device_sn"]); ?>"/> 
 
 	<script>
 	function reload() {
@@ -196,6 +200,8 @@ th {
 		}
 
 		self.location=window.location.pathname + '?device_sn=' + v_sn + '&slot_num=' + v_slot_num + '&current_level=' + v_current_level + '&option=' + v_option;
+
+		return false;
 	}
 	</script>
 
@@ -224,15 +230,11 @@ th {
 
     <h3 >操作</h3>
 
-    <label>
     <input type="radio" class="option-input radio" name="option" value = "1" onclick="reload()" <?php echo $_GET['option'] == "1" ? "checked" : "";?>/> 开始放电
-    </label>
 
-    <label>
     <input type="radio" class="option-input radio" name="option" value = "2" onclick="reload()" <?php echo $_GET['option'] == "2" ? "checked" : "";?>/> 停止放电
-    </label>
 
-<br><br>
+    <br><br>
 <input type = "submit" style = "margin:20px;" value = "提交" class = "button">
 </form>
 </div>
