@@ -93,6 +93,49 @@ void   upload_info__free_unpacked
   assert(message->base.descriptor == &upload_info__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   upload_info_ack__init
+                     (UploadInfoAck         *message)
+{
+  static UploadInfoAck init_value = UPLOAD_INFO_ACK__INIT;
+  *message = init_value;
+}
+size_t upload_info_ack__get_packed_size
+                     (const UploadInfoAck *message)
+{
+  assert(message->base.descriptor == &upload_info_ack__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t upload_info_ack__pack
+                     (const UploadInfoAck *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &upload_info_ack__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t upload_info_ack__pack_to_buffer
+                     (const UploadInfoAck *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &upload_info_ack__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+UploadInfoAck *
+       upload_info_ack__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (UploadInfoAck *)
+     protobuf_c_message_unpack (&upload_info_ack__descriptor,
+                                allocator, len, data);
+}
+void   upload_info_ack__free_unpacked
+                     (UploadInfoAck *message,
+                      ProtobufCAllocator *allocator)
+{
+  assert(message->base.descriptor == &upload_info_ack__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 void   discharge_setting__init
                      (DischargeSetting         *message)
 {
@@ -134,6 +177,49 @@ void   discharge_setting__free_unpacked
                       ProtobufCAllocator *allocator)
 {
   assert(message->base.descriptor == &discharge_setting__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   discharge_setting_ack__init
+                     (DischargeSettingAck         *message)
+{
+  static DischargeSettingAck init_value = DISCHARGE_SETTING_ACK__INIT;
+  *message = init_value;
+}
+size_t discharge_setting_ack__get_packed_size
+                     (const DischargeSettingAck *message)
+{
+  assert(message->base.descriptor == &discharge_setting_ack__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t discharge_setting_ack__pack
+                     (const DischargeSettingAck *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &discharge_setting_ack__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t discharge_setting_ack__pack_to_buffer
+                     (const DischargeSettingAck *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &discharge_setting_ack__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+DischargeSettingAck *
+       discharge_setting_ack__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (DischargeSettingAck *)
+     protobuf_c_message_unpack (&discharge_setting_ack__descriptor,
+                                allocator, len, data);
+}
+void   discharge_setting_ack__free_unpacked
+                     (DischargeSettingAck *message,
+                      ProtobufCAllocator *allocator)
+{
+  assert(message->base.descriptor == &discharge_setting_ack__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   msg__body__init
@@ -541,6 +627,44 @@ const ProtobufCMessageDescriptor upload_info__descriptor =
   (ProtobufCMessageInit) upload_info__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
+static const ProtobufCFieldDescriptor upload_info_ack__field_descriptors[1] =
+{
+  {
+    "res",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UploadInfoAck, res),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned upload_info_ack__field_indices_by_name[] = {
+  0,   /* field[0] = res */
+};
+static const ProtobufCIntRange upload_info_ack__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 1 }
+};
+const ProtobufCMessageDescriptor upload_info_ack__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "UploadInfoAck",
+  "UploadInfoAck",
+  "UploadInfoAck",
+  "",
+  sizeof(UploadInfoAck),
+  1,
+  upload_info_ack__field_descriptors,
+  upload_info_ack__field_indices_by_name,
+  1,  upload_info_ack__number_ranges,
+  (ProtobufCMessageInit) upload_info_ack__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
 static const ProtobufCFieldDescriptor discharge_setting__field_descriptors[3] =
 {
   {
@@ -605,7 +729,71 @@ const ProtobufCMessageDescriptor discharge_setting__descriptor =
   (ProtobufCMessageInit) discharge_setting__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor msg__body__field_descriptors[4] =
+static const ProtobufCFieldDescriptor discharge_setting_ack__field_descriptors[3] =
+{
+  {
+    "setting",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(DischargeSettingAck, setting),
+    &discharge_setting__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "rcc",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(DischargeSettingAck, rcc),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "res",
+    3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(DischargeSettingAck, res),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned discharge_setting_ack__field_indices_by_name[] = {
+  1,   /* field[1] = rcc */
+  2,   /* field[2] = res */
+  0,   /* field[0] = setting */
+};
+static const ProtobufCIntRange discharge_setting_ack__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 3 }
+};
+const ProtobufCMessageDescriptor discharge_setting_ack__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "DischargeSettingAck",
+  "DischargeSettingAck",
+  "DischargeSettingAck",
+  "",
+  sizeof(DischargeSettingAck),
+  3,
+  discharge_setting_ack__field_descriptors,
+  discharge_setting_ack__field_indices_by_name,
+  1,  discharge_setting_ack__number_ranges,
+  (ProtobufCMessageInit) discharge_setting_ack__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor msg__body__field_descriptors[6] =
 {
   {
     "type",
@@ -644,8 +832,20 @@ static const ProtobufCFieldDescriptor msg__body__field_descriptors[4] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "dis_setting",
+    "up_info_ack",
     4,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MSGBODY, up_info_ack),
+    &upload_info_ack__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "dis_setting",
+    5,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_MESSAGE,
     0,   /* quantifier_offset */
@@ -655,17 +855,31 @@ static const ProtobufCFieldDescriptor msg__body__field_descriptors[4] =
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
+  {
+    "dis_setting_ack",
+    6,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(MSGBODY, dis_setting_ack),
+    &discharge_setting_ack__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
 static const unsigned msg__body__field_indices_by_name[] = {
   1,   /* field[1] = device_sn */
-  3,   /* field[3] = dis_setting */
+  4,   /* field[4] = dis_setting */
+  5,   /* field[5] = dis_setting_ack */
   0,   /* field[0] = type */
   2,   /* field[2] = up_info */
+  3,   /* field[3] = up_info_ack */
 };
 static const ProtobufCIntRange msg__body__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 4 }
+  { 0, 6 }
 };
 const ProtobufCMessageDescriptor msg__body__descriptor =
 {
@@ -675,7 +889,7 @@ const ProtobufCMessageDescriptor msg__body__descriptor =
   "MSGBODY",
   "",
   sizeof(MSGBODY),
-  4,
+  6,
   msg__body__field_descriptors,
   msg__body__field_indices_by_name,
   1,  msg__body__number_ranges,
@@ -812,18 +1026,22 @@ const ProtobufCEnumDescriptor discharge__cmd__descriptor =
   discharge__cmd__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
 };
-static const ProtobufCEnumValue msg__type__enum_values_by_number[2] =
+static const ProtobufCEnumValue msg__type__enum_values_by_number[4] =
 {
   { "UPLOAD_INFO", "MSG__TYPE__UPLOAD_INFO", 1 },
-  { "DISCHARGE_SETTING", "MSG__TYPE__DISCHARGE_SETTING", 2 },
+  { "UPLOAD_INFO_ACK", "MSG__TYPE__UPLOAD_INFO_ACK", 2 },
+  { "DISCHARGE_SETTING", "MSG__TYPE__DISCHARGE_SETTING", 3 },
+  { "DISCHARGE_SETTING_ACK", "MSG__TYPE__DISCHARGE_SETTING_ACK", 4 },
 };
 static const ProtobufCIntRange msg__type__value_ranges[] = {
-{1, 0},{0, 2}
+{1, 0},{0, 4}
 };
-static const ProtobufCEnumValueIndex msg__type__enum_values_by_name[2] =
+static const ProtobufCEnumValueIndex msg__type__enum_values_by_name[4] =
 {
-  { "DISCHARGE_SETTING", 1 },
+  { "DISCHARGE_SETTING", 2 },
+  { "DISCHARGE_SETTING_ACK", 3 },
   { "UPLOAD_INFO", 0 },
+  { "UPLOAD_INFO_ACK", 1 },
 };
 const ProtobufCEnumDescriptor msg__type__descriptor =
 {
@@ -832,9 +1050,9 @@ const ProtobufCEnumDescriptor msg__type__descriptor =
   "MSG_TYPE",
   "MSGTYPE",
   "",
-  2,
+  4,
   msg__type__enum_values_by_number,
-  2,
+  4,
   msg__type__enum_values_by_name,
   1,
   msg__type__value_ranges,

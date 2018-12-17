@@ -48,154 +48,138 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
 		fmt.Println("unmarshaling error: ", err)
 	} else {
 
-		if (battery_ageing.MSG_TYPE_UPLOAD_INFO != cmsg.GetType()) {
-			fmt.Println("msg type not wanted")
-			return
-		}
+		if (battery_ageing.MSG_TYPE_DISCHARGE_SETTING_ACK == cmsg.GetType()) {
+            fmt.Println("recv setting ack");
 
-        dev_sn := cmsg.GetDeviceSn();
-        if (10 != len(dev_sn)) {
-            fmt.Println("device sn len err \n", dev_sn)
-            return
-        }
-
-        up := cmsg.GetUpInfo();
-        if (up == nil) {
-            fmt.Println("get upload info err\n")
-            return
-        }
-
-		a := up.GetBatteryAgeingInfo();
-        if (a == nil) {
-            fmt.Println("get battery ageing info err\n")
-            return
-        }
-
-        l := len(a);
-        fmt.Println("cnt ", l);
-
-        for i:=0; i < l; i++ {
-
-            fmt.Println(
-				"Timestamp"           , *a[i].Timestamp          ,
-				"BatterySn"           , *a[i].BatterySn          ,
-				"SlotNum"             , *a[i].SlotNum            ,
-				"Voltage"             , *a[i].Voltage            ,
-				"Current"             , *a[i].Current            ,
-				"Temprature"          , *a[i].Temprature         ,
-				"Elapsed"             , *a[i].Elapsed            ,
-				"Discharging"         , *a[i].Discharging        ,
-				"XTemprature"         , *a[i].XTemprature        ,
-				"XVoltage"            , *a[i].XVoltage           ,
-				"XFullChargecapacity" , *a[i].XFullChargecapacity,
-				"XRemainingcapacity"  , *a[i].XRemainingcapacity ,
-				"XAveragecurrent"     , *a[i].XAveragecurrent    ,
-				"XCyclecount"         , *a[i].XCyclecount        ,
-				"XBmssafetyStatus"    , *a[i].XBmssafetyStatus   ,
-				"XBmsflags"           , *a[i].XBmsflags          ,
-				"XBatterystatus"      , *a[i].XBatterystatus     ,
-				"XChargestatus"       , *a[i].XChargestatus      ,
-				"XEnablestatus"       , *a[i].XEnablestatus      ,
-				"XSlotstatus"         , *a[i].XSlotstatus        ,
-				"XDestroyed"          , *a[i].XDestroyed         ,
-				"XHasbms"             , *a[i].XHasbms            ,
-				"XRadio"              , *a[i].XRadio             )
-
-            timestamp           := *a[i].Timestamp
-            batterySn           := *a[i].BatterySn
-            slotNum             := *a[i].SlotNum
-            voltage             := *a[i].Voltage
-            current             := *a[i].Current
-			temprature          := *a[i].Temprature
-            elapsed             := *a[i].Elapsed
-            discharging         := *a[i].Discharging
-            xtemprature         := *a[i].XTemprature
-            xvoltage            := *a[i].XVoltage
-            xfullchargecapacity := *a[i].XFullChargecapacity
-            xremainingcapacity  := *a[i].XRemainingcapacity
-            xaveragecurrent     := *a[i].XAveragecurrent
-            xcyclecount         := *a[i].XCyclecount
-            xbmssafetystatus    := *a[i].XBmssafetyStatus
-            xbmsflags           := *a[i].XBmsflags
-            xbatterystatus      := int32(*a[i].XBatterystatus)
-            xchargestatus       := int32(*a[i].XChargestatus)
-            xenablestatus       := int32(*a[i].XEnablestatus)
-            xslotstatus         := *a[i].XSlotstatus
-            xdestroyed          := *a[i].XDestroyed
-            xhasbms             := *a[i].XHasbms
-            xradio              := *a[i].XRadio
-
-			msg := db_mysql.MqttMsg{
-				0                   ,
-				timestamp           ,
-				batterySn           ,
-				slotNum             ,
-				voltage             ,
-				current             ,
-				temprature          ,
-				elapsed             ,
-				discharging         ,
-				xtemprature         ,
-				xvoltage            ,
-				xfullchargecapacity ,
-				xremainingcapacity  ,
-				xaveragecurrent     ,
-				xcyclecount         ,
-				xbmssafetystatus    ,
-				xbmsflags           ,
-				xbatterystatus      ,
-				xchargestatus       ,
-				xenablestatus       ,
-				xslotstatus         ,
-				xdestroyed          ,
-				xhasbms             ,
-				xradio              ,
-            };
-
-			//save to mysql
-            config := db_mysql.MySQLConfig{
-                db_mysql.DATABASE_USER,
-                db_mysql.DATABASE_PASSWORD,
-                db_mysql.DATABASE_ADDR,
-                db_mysql.DATABASE_PORT,
-                "",
+            dev_sn := cmsg.GetDeviceSn();
+            if (10 != len(dev_sn)) {
+                fmt.Println("device sn len err \n", dev_sn)
+                return
             }
-			t := time.Now().Local()
-			table_name := dev_sn + "_" + t.Format("20060102")
-			id, err := db.InsertMqttMsg(config, table_name, &msg)
-			if err != nil {
-				fmt.Printf("insert id %d err\n",id)
-			} else {
-				fmt.Printf("insert id %d\n",id)
-			}
-        }
-        /*
-		head := cmsg.GetMsgHead()
-		if head == nil {
-			fmt.Println("get msg head error")
-		} else {
-			cmd := head.GetCmd()
 
-			//save to mysql
-			t := time.Now().Local()
-			table_name := "mqtt" + t.Format("20060102")
-			timestamp := t.Format("15:04:05.000 2006-01-02")
-			msg := db_mysql.MqttMsg{
-				0,
-				timestamp,
-				deviceid,
-				topic1,
-				msginfo.CMD_name[int32(cmd)],
-				base64.StdEncoding.EncodeToString(data),
-			}
-			id, err := db.InsertMqttMsg(table_name, &msg)
-			if err != nil {
-				fmt.Printf("%-64s%-32s%-8d err\n", topic, cmd, id)
-			} else {
-				fmt.Printf("%-64s%-32s%-8d\n", topic, cmd, id)
-			}
+            ack := cmsg.GetDisSettingAck();
+            fmt.Println("setting ack is ", ack.GetRes(), " rcc is ", ack.GetRcc());
+
+        } else if (battery_ageing.MSG_TYPE_UPLOAD_INFO == cmsg.GetType()) {
+			fmt.Println("recv upload info")
+
+            dev_sn := cmsg.GetDeviceSn();
+            if (10 != len(dev_sn)) {
+                fmt.Println("device sn len err \n", dev_sn)
+                return
+            }
+
+            up := cmsg.GetUpInfo();
+            if (up == nil) {
+                fmt.Println("get upload info err\n")
+                return
+            }
+
+            a := up.GetBatteryAgeingInfo();
+            if (a == nil) {
+                fmt.Println("get battery ageing info err\n")
+                return
+            }
+
+            l := len(a);
+            fmt.Println("cnt ", l);
+
+            for i:=0; i < l; i++ {
+
+                fmt.Println(
+                    "Timestamp"           , *a[i].Timestamp          ,
+                    "BatterySn"           , *a[i].BatterySn          ,
+                    "SlotNum"             , *a[i].SlotNum            ,
+                    "Voltage"             , *a[i].Voltage            ,
+                    "Current"             , *a[i].Current            ,
+                    "Temprature"          , *a[i].Temprature         ,
+                    "Elapsed"             , *a[i].Elapsed            ,
+                    "Discharging"         , *a[i].Discharging        ,
+                    "XTemprature"         , *a[i].XTemprature        ,
+                    "XVoltage"            , *a[i].XVoltage           ,
+                    "XFullChargecapacity" , *a[i].XFullChargecapacity,
+                    "XRemainingcapacity"  , *a[i].XRemainingcapacity ,
+                    "XAveragecurrent"     , *a[i].XAveragecurrent    ,
+                    "XCyclecount"         , *a[i].XCyclecount        ,
+                    "XBmssafetyStatus"    , *a[i].XBmssafetyStatus   ,
+                    "XBmsflags"           , *a[i].XBmsflags          ,
+                    "XBatterystatus"      , *a[i].XBatterystatus     ,
+                    "XChargestatus"       , *a[i].XChargestatus      ,
+                    "XEnablestatus"       , *a[i].XEnablestatus      ,
+                    "XSlotstatus"         , *a[i].XSlotstatus        ,
+                    "XDestroyed"          , *a[i].XDestroyed         ,
+                    "XHasbms"             , *a[i].XHasbms            ,
+                    "XRadio"              , *a[i].XRadio             )
+
+                timestamp           := *a[i].Timestamp
+                batterySn           := *a[i].BatterySn
+                slotNum             := *a[i].SlotNum
+                voltage             := *a[i].Voltage
+                current             := *a[i].Current
+                temprature          := *a[i].Temprature
+                elapsed             := *a[i].Elapsed
+                discharging         := *a[i].Discharging
+                xtemprature         := *a[i].XTemprature
+                xvoltage            := *a[i].XVoltage
+                xfullchargecapacity := *a[i].XFullChargecapacity
+                xremainingcapacity  := *a[i].XRemainingcapacity
+                xaveragecurrent     := *a[i].XAveragecurrent
+                xcyclecount         := *a[i].XCyclecount
+                xbmssafetystatus    := *a[i].XBmssafetyStatus
+                xbmsflags           := *a[i].XBmsflags
+                xbatterystatus      := int32(*a[i].XBatterystatus)
+                xchargestatus       := int32(*a[i].XChargestatus)
+                xenablestatus       := int32(*a[i].XEnablestatus)
+                xslotstatus         := *a[i].XSlotstatus
+                xdestroyed          := *a[i].XDestroyed
+                xhasbms             := *a[i].XHasbms
+                xradio              := *a[i].XRadio
+
+                msg := db_mysql.MqttMsg{
+                    0                   ,
+                    timestamp           ,
+                    batterySn           ,
+                    slotNum             ,
+                    voltage             ,
+                    current             ,
+                    temprature          ,
+                    elapsed             ,
+                    discharging         ,
+                    xtemprature         ,
+                    xvoltage            ,
+                    xfullchargecapacity ,
+                    xremainingcapacity  ,
+                    xaveragecurrent     ,
+                    xcyclecount         ,
+                    xbmssafetystatus    ,
+                    xbmsflags           ,
+                    xbatterystatus      ,
+                    xchargestatus       ,
+                    xenablestatus       ,
+                    xslotstatus         ,
+                    xdestroyed          ,
+                    xhasbms             ,
+                    xradio              ,
+                };
+
+                //save to mysql
+                config := db_mysql.MySQLConfig{
+                    db_mysql.DATABASE_USER,
+                    db_mysql.DATABASE_PASSWORD,
+                    db_mysql.DATABASE_ADDR,
+                    db_mysql.DATABASE_PORT,
+                    "",
+                }
+                t := time.Now().Local()
+                table_name := dev_sn + "_" + t.Format("20060102")
+                id, err := db.InsertMqttMsg(config, table_name, &msg)
+                if err != nil {
+                    fmt.Printf("insert id %d err\n",id)
+                } else {
+                    fmt.Printf("insert id %d\n",id)
+                }
+            }
 		}
-    */
 	}
 
 }

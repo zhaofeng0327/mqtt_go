@@ -17,7 +17,9 @@ PROTOBUF_C__BEGIN_DECLS
 
 typedef struct _BatteryAgeingInfo BatteryAgeingInfo;
 typedef struct _UploadInfo UploadInfo;
+typedef struct _UploadInfoAck UploadInfoAck;
 typedef struct _DischargeSetting DischargeSetting;
+typedef struct _DischargeSettingAck DischargeSettingAck;
 typedef struct _MSGBODY MSGBODY;
 
 
@@ -90,7 +92,9 @@ typedef enum _DISCHARGECMD {
 } DISCHARGECMD;
 typedef enum _MSGTYPE {
   MSG__TYPE__UPLOAD_INFO = 1,
-  MSG__TYPE__DISCHARGE_SETTING = 2
+  MSG__TYPE__UPLOAD_INFO_ACK = 2,
+  MSG__TYPE__DISCHARGE_SETTING = 3,
+  MSG__TYPE__DISCHARGE_SETTING_ACK = 4
     PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(MSG__TYPE)
 } MSGTYPE;
 
@@ -184,6 +188,16 @@ struct  _UploadInfo
     , 0,NULL }
 
 
+struct  _UploadInfoAck
+{
+  ProtobufCMessage base;
+  int32_t res;
+};
+#define UPLOAD_INFO_ACK__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&upload_info_ack__descriptor) \
+    , 0 }
+
+
 struct  _DischargeSetting
 {
   ProtobufCMessage base;
@@ -196,17 +210,31 @@ struct  _DischargeSetting
     , 0, 0, 0 }
 
 
+struct  _DischargeSettingAck
+{
+  ProtobufCMessage base;
+  DischargeSetting *setting;
+  int32_t rcc;
+  int32_t res;
+};
+#define DISCHARGE_SETTING_ACK__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&discharge_setting_ack__descriptor) \
+    , NULL, 0, 0 }
+
+
 struct  _MSGBODY
 {
   ProtobufCMessage base;
   MSGTYPE type;
   char *device_sn;
   UploadInfo *up_info;
+  UploadInfoAck *up_info_ack;
   DischargeSetting *dis_setting;
+  DischargeSettingAck *dis_setting_ack;
 };
 #define MSG__BODY__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&msg__body__descriptor) \
-    , 0, NULL, NULL, NULL }
+    , 0, NULL, NULL, NULL, NULL, NULL }
 
 
 /* BatteryAgeingInfo methods */
@@ -247,6 +275,25 @@ UploadInfo *
 void   upload_info__free_unpacked
                      (UploadInfo *message,
                       ProtobufCAllocator *allocator);
+/* UploadInfoAck methods */
+void   upload_info_ack__init
+                     (UploadInfoAck         *message);
+size_t upload_info_ack__get_packed_size
+                     (const UploadInfoAck   *message);
+size_t upload_info_ack__pack
+                     (const UploadInfoAck   *message,
+                      uint8_t             *out);
+size_t upload_info_ack__pack_to_buffer
+                     (const UploadInfoAck   *message,
+                      ProtobufCBuffer     *buffer);
+UploadInfoAck *
+       upload_info_ack__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   upload_info_ack__free_unpacked
+                     (UploadInfoAck *message,
+                      ProtobufCAllocator *allocator);
 /* DischargeSetting methods */
 void   discharge_setting__init
                      (DischargeSetting         *message);
@@ -265,6 +312,25 @@ DischargeSetting *
                       const uint8_t       *data);
 void   discharge_setting__free_unpacked
                      (DischargeSetting *message,
+                      ProtobufCAllocator *allocator);
+/* DischargeSettingAck methods */
+void   discharge_setting_ack__init
+                     (DischargeSettingAck         *message);
+size_t discharge_setting_ack__get_packed_size
+                     (const DischargeSettingAck   *message);
+size_t discharge_setting_ack__pack
+                     (const DischargeSettingAck   *message,
+                      uint8_t             *out);
+size_t discharge_setting_ack__pack_to_buffer
+                     (const DischargeSettingAck   *message,
+                      ProtobufCBuffer     *buffer);
+DischargeSettingAck *
+       discharge_setting_ack__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   discharge_setting_ack__free_unpacked
+                     (DischargeSettingAck *message,
                       ProtobufCAllocator *allocator);
 /* MSGBODY methods */
 void   msg__body__init
@@ -293,8 +359,14 @@ typedef void (*BatteryAgeingInfo_Closure)
 typedef void (*UploadInfo_Closure)
                  (const UploadInfo *message,
                   void *closure_data);
+typedef void (*UploadInfoAck_Closure)
+                 (const UploadInfoAck *message,
+                  void *closure_data);
 typedef void (*DischargeSetting_Closure)
                  (const DischargeSetting *message,
+                  void *closure_data);
+typedef void (*DischargeSettingAck_Closure)
+                 (const DischargeSettingAck *message,
                   void *closure_data);
 typedef void (*MSGBODY_Closure)
                  (const MSGBODY *message,
@@ -312,7 +384,9 @@ extern const ProtobufCEnumDescriptor    discharge__cmd__descriptor;
 extern const ProtobufCEnumDescriptor    msg__type__descriptor;
 extern const ProtobufCMessageDescriptor battery_ageing_info__descriptor;
 extern const ProtobufCMessageDescriptor upload_info__descriptor;
+extern const ProtobufCMessageDescriptor upload_info_ack__descriptor;
 extern const ProtobufCMessageDescriptor discharge_setting__descriptor;
+extern const ProtobufCMessageDescriptor discharge_setting_ack__descriptor;
 extern const ProtobufCMessageDescriptor msg__body__descriptor;
 
 PROTOBUF_C__END_DECLS

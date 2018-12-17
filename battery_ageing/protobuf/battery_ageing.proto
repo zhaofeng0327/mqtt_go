@@ -57,6 +57,10 @@ message UploadInfo {
   repeated BatteryAgeingInfo battery_ageing_info = 1;
 }
 
+message UploadInfoAck {
+  required int32 res=1;
+}
+
 enum DISCHARGE_CMD {
   START_DISCHARGE=1;
   STOP_DISCHARGE=2;
@@ -67,15 +71,24 @@ message DischargeSetting {
   required DISCHARGE_CMD cmd=2;
   required int32 level=3;
 }
+message DischargeSettingAck {
+  required DischargeSetting setting=1;
+  required int32 rcc=2;
+  required int32 res=3;
+}
 
 enum MSG_TYPE {
   UPLOAD_INFO=1;
-  DISCHARGE_SETTING=2;
+  UPLOAD_INFO_ACK=2;
+  DISCHARGE_SETTING=3;
+  DISCHARGE_SETTING_ACK=4;
 }
 
 message MSG_BODY {
   required MSG_TYPE type=1;
   required string device_sn=2;
   optional UploadInfo up_info=3;
-  optional DischargeSetting dis_setting=4;
+  optional UploadInfoAck up_info_ack=4;
+  optional DischargeSetting dis_setting=5;
+  optional DischargeSettingAck dis_setting_ack=6;
 }
