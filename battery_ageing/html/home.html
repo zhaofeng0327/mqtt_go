@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+
+.item1 {
+	grid-area: header;
+	align-self: center;
+}
+.item2 { grid-area: main; 
+}
+
+.grid-container {
+display: grid;
+	 grid-template:
+		 'header'
+		 'main';
+	 grid-gap: 10px;
+	 background-color: #2196F3;
+width: 100vw;
+height: 100vh;
+padding: 10px;
+}
+
+.grid-container>div {
+	text-color: #000000;
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+	grid-column: 1;
+padding: 20px 0;
+	 font-size: 30px;
+	 justify-items: center;
+}
+
+.button {
+	background-color: #4CAF50;
+border: none;
+color: white;
+padding: 15px 32px;
+	 text-align: center;
+	 text-decoration: none;
+display: inline-block;
+	 font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+}
+
+input[type=text] {
+width: 40%;
+       text-align: center;
+padding: 12px 20px;
+margin: 8px 0;
+	box-sizing: border-box;
+border: none;
+	background-color: #ADFF2F;
+color: white;
+       font-size:24px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="grid-container">
+
+<div class="item1">
+<h1>街电电池老化系统</h1>
+</div>
+
+
+<div class="item2">  
+
+<script>
+function jump() {
+	var v = document.getElementById("sn").value;
+	//alert(v);assign
+	if (v.length == 10)
+		window.location.assign("battery_ageing.html.php?device_sn=" + v + "&slot_num=1&current_level=0&option=1");
+}
+</script>
+
+柜机SN <input type="text" id="sn" name="device_sn"/>
+<input type="button" value="查询" class = "button" onclick="jump()">
+
+
+</div>
+</div>
+</body>
+</html>
