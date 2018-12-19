@@ -63,7 +63,7 @@ type OptionRecord struct {
 	User                string
 	Batterysn           string
 	Slotnum             int32
-	Option              int32
+	Cmd                 int32
     Level               int32
 	Rcc                 int32
 }
@@ -88,7 +88,7 @@ func (c MySQLConfig) dataStoreName(databaseName string) string {
 }
 
 // ensureTableExists checks the table exists. If not, it creates it.
-func (config MySQLConfig) ensureTableExists(table_name string) error {
+func (config MySQLConfig) ensureUpinfoTableExists(table_name string) error {
 	conn, err := sql.Open("mysql", config.dataStoreName(""))
 	if err != nil {
 		fmt.Println("could not get connection")
@@ -108,14 +108,52 @@ func (config MySQLConfig) ensureTableExists(table_name string) error {
 	if _, err := conn.Exec("USE " + DATABASE_NAME); err != nil {
 		// MySQL error 1049 is "database does not exist"
 		if mErr, ok := err.(*mysql.MySQLError); ok && mErr.Number == 1049 {
-			return createTable(conn, DATABASE_NAME, table_name)
+			return createUpinfoTable(conn, DATABASE_NAME, table_name)
 		}
 	}
 
 	if _, err := conn.Exec("DESCRIBE " + table_name); err != nil {
 		// MySQL error 1146 is "table does not exist"
 		if mErr, ok := err.(*mysql.MySQLError); ok && mErr.Number == 1146 {
-			return createTable(conn, DATABASE_NAME, table_name)
+			return createUpinfoTable(conn, DATABASE_NAME, table_name)
+		}
+		// Unknown error.
+		return fmt.Errorf("mysql: could not connect to the database: %v", err)
+	}
+
+	return nil
+}
+
+
+// ensureTableExists checks the table exists. If not, it creates it.
+func (config MySQLConfig) ensureOptTableExists(table_name string) error {
+	conn, err := sql.Open("mysql", config.dataStoreName(""))
+	if err != nil {
+		fmt.Println("could not get connection")
+		return fmt.Errorf("mysql: could not get a connection: %v", err)
+	}
+
+	defer conn.Close()
+
+	// Check the connection.
+	if conn.Ping() == driver.ErrBadConn {
+		fmt.Println("could not connect to database")
+		return fmt.Errorf("mysql: could not connect to the database. " +
+			"could be bad address, or this address is not whitelisted for access.")
+	}
+
+
+	if _, err := conn.Exec("USE " + DATABASE_NAME); err != nil {
+		// MySQL error 1049 is "database does not exist"
+		if mErr, ok := err.(*mysql.MySQLError); ok && mErr.Number == 1049 {
+			return createOptTable(conn, DATABASE_NAME, table_name)
+		}
+	}
+
+	if _, err := conn.Exec("DESCRIBE " + table_name); err != nil {
+		// MySQL error 1146 is "table does not exist"
+		if mErr, ok := err.(*mysql.MySQLError); ok && mErr.Number == 1146 {
+			return createOptTable(conn, DATABASE_NAME, table_name)
 		}
 		// Unknown error.
 		return fmt.Errorf("mysql: could not connect to the database: %v", err)
@@ -125,7 +163,7 @@ func (config MySQLConfig) ensureTableExists(table_name string) error {
 }
 
 // createTable creates the table, and if necessary, the database.
-func createTable(conn *sql.DB, database_name, table_name string) error {
+func createUpinfoTable(conn *sql.DB, database_name, table_name string) error {
 
 	createTableStatements := make([]string, 3)
 	createTableStatements[0] = fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v %v", database_name, "DEFAULT CHARACTER SET = 'utf8' DEFAULT COLLATE 'utf8_general_ci';")
@@ -168,6 +206,37 @@ func createTable(conn *sql.DB, database_name, table_name string) error {
 
 	return nil
 }
+
+// createTable creates the table, and if necessary, the database.
+func createOptTable(conn *sql.DB, database_name, table_name string) error {
+
+	createTableStatements := make([]string, 3)
+	createTableStatements[0] = fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %v %v", database_name, "DEFAULT CHARACTER SET = 'utf8' DEFAULT COLLATE 'utf8_general_ci';")
+	createTableStatements[1] = fmt.Sprintf("USE %v", database_name)
+	createTableStatements[2] = fmt.Sprintf("CREATE TABLE IF NOT EXISTS %v %v", table_name,
+		"(id INT UNSIGNED NOT NULL AUTO_INCREMENT, " +
+		"timestamp           TEXT NULL, " +
+		"user                TEXT NULL, " +
+		"batterysn           TEXT NULL, " +
+		"slotnum             INT  NULL, " +
+		"cmd                 INT  NULL, " +
+		"level               INT  NULL, " +
+		"rcc                 INT  NULL, " +
+		"PRIMARY KEY (id))")
+
+	for _, stmt := range createTableStatements {
+		fmt.Println("sql cmd : ", stmt)
+		_, err := conn.Exec(stmt)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+
 
 // execAffectingOneRow executes a given statement, expecting one row to be affected.
 func execAffectingOneRow(stmt *sql.Stmt, args ...interface{}) (sql.Result, error) {
@@ -371,7 +440,7 @@ func (db *MysqlDB) GetMqttMsgById(table_name string, id int64) (*MqttMsg, error)
 func (db *MysqlDB) InsertMqttMsg(config MySQLConfig, table_name string, msg *MqttMsg) (id int64, err error) {
 
 	// Check database and table exists. If not, create it.
-	if err := config.ensureTableExists(table_name); err != nil {
+	if err := config.ensureUpinfoTableExists(table_name); err != nil {
 		return 0, fmt.Errorf("table %v not exist %v", table_name, err)
 	}
 
@@ -443,7 +512,7 @@ func (db *MysqlDB) InsertMqttMsg(config MySQLConfig, table_name string, msg *Mqt
 func (db *MysqlDB) InsertOptionRecord(config MySQLConfig, table_name string, opt *OptionRecord) (id int64, err error) {
 
 	// Check database and table exists. If not, create it.
-	if err := config.ensureTableExists(table_name); err != nil {
+	if err := config.ensureOptTableExists(table_name); err != nil {
 		return 0, fmt.Errorf("table %v not exist %v", table_name, err)
 	}
 
@@ -452,7 +521,7 @@ func (db *MysqlDB) InsertOptionRecord(config MySQLConfig, table_name string, opt
 	"user                , " +
 	"batterysn           , " +
 	"slotnum             , " +
-	"option              , " +
+	"cmd                 , " +
 	"level               , " +
 	"rcc                   " +
 	") VALUES (?, ?, ?, ?, ?, ?, ?)")
@@ -465,7 +534,7 @@ func (db *MysqlDB) InsertOptionRecord(config MySQLConfig, table_name string, opt
 		opt.User                ,
 		opt.Batterysn           ,
 		opt.Slotnum             ,
-		opt.Option              ,
+		opt.Cmd                 ,
 		opt.Level               ,
 		opt.Rcc)
 
