@@ -201,13 +201,15 @@ struct  _UploadInfoAck
 struct  _DischargeSetting
 {
   ProtobufCMessage base;
+  char *timestamp;
+  char *user;
   int32_t slot_num;
   DISCHARGECMD cmd;
   int32_t level;
 };
 #define DISCHARGE_SETTING__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&discharge_setting__descriptor) \
-    , 0, 0, 0 }
+    , NULL, NULL, 0, 0, 0 }
 
 
 struct  _DischargeSettingAck

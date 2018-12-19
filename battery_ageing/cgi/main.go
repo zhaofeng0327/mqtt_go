@@ -122,7 +122,10 @@ func main() {
 	var q struct{};
 	var b []byte;
 
+	user := "zf";
+	
 	setting := &battery_ageing.DischargeSetting {
+		&user,
 		proto.Int32(slot_num),
 		&cmd,
 		proto.Int32(level),

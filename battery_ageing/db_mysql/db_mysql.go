@@ -57,6 +57,16 @@ type MqttMsg struct {
 	XRadio              int32
 }
 
+type OptionRecord struct {
+	Id                  int32
+	Timestamp           string
+	User                string
+	Batterysn           string
+	Slotnum             int32
+	Option              int32
+    Level               int32
+	Rcc                 int32
+}
 
 // dataStoreName returns a connection string suitable for sql.Open.
 func (c MySQLConfig) dataStoreName(databaseName string) string {
@@ -418,6 +428,46 @@ func (db *MysqlDB) InsertMqttMsg(config MySQLConfig, table_name string, msg *Mqt
 		msg.XDestroyed          ,
 		msg.XHasbms             ,
 		msg.XRadio              )
+
+	if err != nil {
+		return 0, err
+	}
+
+	lastInsertID, err := r.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("mysql: could not get last insert ID: %v", err)
+	}
+	return lastInsertID, nil
+}
+
+func (db *MysqlDB) InsertOptionRecord(config MySQLConfig, table_name string, opt *OptionRecord) (id int64, err error) {
+
+	// Check database and table exists. If not, create it.
+	if err := config.ensureTableExists(table_name); err != nil {
+		return 0, fmt.Errorf("table %v not exist %v", table_name, err)
+	}
+
+	stmt, err := db.conn.Prepare("INSERT INTO " + table_name + " (" +
+	"timestamp           , " +
+	"user                , " +
+	"batterysn           , " +
+	"slotnum             , " +
+	"option              , " +
+	"level               , " +
+	"rcc                   " +
+	") VALUES (?, ?, ?, ?, ?, ?, ?)")
+	if err != nil {
+		return 0, fmt.Errorf("mysql: prepare list by cmd: %v", err)
+	}
+
+	r, err := execAffectingOneRow(stmt,
+		opt.Timestamp           ,
+		opt.User                ,
+		opt.Batterysn           ,
+		opt.Slotnum             ,
+		opt.Option              ,
+		opt.Level               ,
+		opt.Rcc)
 
 	if err != nil {
 		return 0, err

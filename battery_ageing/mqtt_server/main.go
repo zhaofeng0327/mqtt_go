@@ -60,6 +60,37 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
             ack := cmsg.GetDisSettingAck();
             fmt.Println("setting ack is ", ack.GetRes(), " rcc is ", ack.GetRcc());
 
+			setting := ack.GetSetting();
+
+			opt := db_mysql.OptionRecord{
+				0,
+				setting.GetTimestamp(),
+				setting.GetUser(),
+				dev_sn,
+				setting.GetSlotNum(),
+				int32(setting.GetCmd()),
+				setting.GetLevel(),
+				ack.GetRcc(),
+			}
+			
+			//save to mysql
+			config := db_mysql.MySQLConfig{
+				db_mysql.DATABASE_USER,
+				db_mysql.DATABASE_PASSWORD,
+				db_mysql.DATABASE_ADDR,
+				db_mysql.DATABASE_PORT,
+				"",
+			}
+
+			table_name := "opt_" + dev_sn
+			id, err := db.InsertOptionRecord(config, table_name, &opt)
+			if err != nil {
+				fmt.Printf("insert id %d err\n",id)
+			} else {
+				fmt.Printf("insert id %d\n",id)
+			}
+
+			
         } else if (battery_ageing.MSG_TYPE_UPLOAD_INFO == cmsg.GetType()) {
 			fmt.Println("recv upload info")
 

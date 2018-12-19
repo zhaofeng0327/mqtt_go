@@ -67,10 +67,13 @@ enum DISCHARGE_CMD {
 }
 
 message DischargeSetting {
-  required int32 slot_num=1;
-  required DISCHARGE_CMD cmd=2;
-  required int32 level=3;
+  required string timestamp=1;
+  required string user=2;
+  required int32 slot_num=3;
+  required DISCHARGE_CMD cmd=4;
+  required int32 level=5;
 }
+
 message DischargeSettingAck {
   required DischargeSetting setting=1;
   required int32 rcc=2;
