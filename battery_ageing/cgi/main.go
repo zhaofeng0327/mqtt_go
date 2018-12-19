@@ -94,16 +94,18 @@ func main() {
 		return
 	}
 
-    dev_sn := os.Args[1]
+    timestamp := os.Args[1]
+    user := os.Args[2]
+    dev_sn := os.Args[3]
 
-    i64, err := strconv.ParseInt(os.Args[2], 10, 32)
+    i64, err := strconv.ParseInt(os.Args[4], 10, 32)
     if err != nil {
         fmt.Printf("strconv to int err", err);
         return
     }
     slot_num := int32(i64)
 
-    i64, err = strconv.ParseInt(os.Args[3], 10, 32)
+    i64, err = strconv.ParseInt(os.Args[5], 10, 32)
     if err != nil {
         fmt.Printf("strconv to int err", err);
         return
@@ -112,7 +114,7 @@ func main() {
     //i32 := int32(i64)
     cmd = battery_ageing.DISCHARGE_CMD(i64)
 
-    i64, err = strconv.ParseInt(os.Args[4], 10, 32)
+    i64, err = strconv.ParseInt(os.Args[6], 10, 32)
     if err != nil {
         fmt.Printf("strconv2 to int err", err);
         return
@@ -122,10 +124,6 @@ func main() {
 	var q struct{};
 	var b []byte;
 
-	t := time.Now().Local()
-    timestamp := t.Format("20060102120102")
-	user := "zf";
-	
 	setting := &battery_ageing.DischargeSetting {
 		&timestamp,
 		&user,

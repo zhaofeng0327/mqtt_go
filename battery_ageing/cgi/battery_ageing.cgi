@@ -24,6 +24,16 @@ $device_sn = $FORM{device_sn};
 $slot_num = $FORM{slot_num};
 $option = $FORM{option};
 $current_level = $FORM{current_level};
+use Time::gmtime;
+$gm = gmtime();
+$timestamp = sprintf("%04d%02d%02d%02d%02d%02d",
+	$gm->year + 1900,
+	$gm->mon,
+	$gm->mday,
+	$gm->hour,
+	$gm->min,
+	$gm->sec);
+$user="zf";
 
 print "Content-type:text/html\r\n\r\n";
 print "<html>";
@@ -38,6 +48,8 @@ print "柜机 $device_sn 卡槽 $slot_num 操作 $option 电流 $current_level";
 print "</body>";
 print "</html>";
 
-system("/usr/lib/cgi-bin/bat_pub.cgi", $device_sn, $slot_num, $option, $current_level);
+
+
+system("/usr/lib/cgi-bin/bat_pub.cgi", $timestamp, $user, $device_sn, $slot_num, $option, $current_level);
 
 1;
