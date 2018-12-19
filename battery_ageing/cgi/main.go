@@ -122,9 +122,12 @@ func main() {
 	var q struct{};
 	var b []byte;
 
+	t := time.Now().Local()
+    timestamp := t.Format("20060102120102")
 	user := "zf";
 	
 	setting := &battery_ageing.DischargeSetting {
+		&timestamp,
 		&user,
 		proto.Int32(slot_num),
 		&cmd,
