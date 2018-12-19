@@ -58,7 +58,12 @@ var mqttPublishHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.M
             }
 
             ack := cmsg.GetDisSettingAck();
-            fmt.Println("setting ack is ", ack.GetRes(), " rcc is ", ack.GetRcc());
+            fmt.Println("setting ack res = ", ack.GetRes(), " rcc is ", ack.GetRcc());
+
+            if (ack.GetRes()) {
+                fmt.Println("set discharge failed");
+                return
+            }
 
 			setting := ack.GetSetting();
 
