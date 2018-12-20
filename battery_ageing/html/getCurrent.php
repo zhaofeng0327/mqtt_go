@@ -19,6 +19,15 @@
             ]
           }
 */
+
+function getCurrentData($slot_num)
+{
+	list($year, $mon, $day, $hour, $min) = sscanf($start_time, "%d-%d-%dT%d:%d");
+	$start_t=sprintf("%04d%02d%02d%02d%02d00", $year, $mon, $day, $hour, $min);
+
+	list($year, $mon, $day, $hour, $min) = sscanf($end_time, "%d-%d-%dT%d:%d");
+	$end_t=sprintf("%04d%02d%02d%02d%02d00", $year, $mon, $day, $hour, $min);
+	
 	$r = array();
 
 	$servername = "localhost";
@@ -36,17 +45,19 @@
 	$result = mysqli_query($conn, $sql);
 
 	$tables = array();
-*/
 
-	$sql = "SELECT * FROM A484MB1358_20181220 where slotnum=1 order by timestamp DESC limit 100";
+	$sql = "SELECT * FROM A484MB1358_20181220 where slotnum=$slot_num order by timestamp DESC limit 100";
+*/
+	$sql = "SELECT * FROM A484MB1358_20181220 where slotnum=$slot_num and timestamp between $start_t and $end_t order by timestamp";
+
 	$result = mysqli_query($conn, $sql);
 
 	if (mysqli_num_rows($result) > 0) {
 		// output data of each row
 		while($row = mysqli_fetch_assoc($result)) {
 			$t = $row["timestamp"];
-			$v = $row["voltage"];
-			$xv = $row["xvoltage"];
+			$v = $row["current"];
+			$xv = $row["xcurrent"];
 			$rs = array(array("v"=>$t), array("v"=>$v), array("v"=>$xv));
 			$rc = array("c"=>$rs);
 			array_push($r, $rc);
@@ -60,10 +71,10 @@
 	$h3=array("id"=>"c", "label"=>"内部测量", "type"=>"number");
 	//$h=array("cols"=>array($h1, $h2, $h3));
 
-	$c1=array(array("v"=>"a"), array("v"=>1000), array("v"=>400));
-	$c2=array(array("v"=>"a"), array("v"=>1170), array("v"=>460));
-	$c3=array(array("v"=>"a"), array("v"=>660), array("v"=>1120));
-	$c4=array(array("v"=>"a"), array("v"=>1030), array("v"=>540));
+	//$c1=array(array("v"=>"a"), array("v"=>1000), array("v"=>400));
+	//$c2=array(array("v"=>"a"), array("v"=>1170), array("v"=>460));
+	//$c3=array(array("v"=>"a"), array("v"=>660), array("v"=>1120));
+	//$c4=array(array("v"=>"a"), array("v"=>1030), array("v"=>540));
 	//$c=array("rows"=>array(array("c"=>$c1), array("c"=>$c2), array("c"=>$c3), array("c"=>$c4)));
 
 	//$data=array("cols"=>array($h1, $h2, $h3), "rows"=>array(array("c"=>$c1), array("c"=>$c2), array("c"=>$c3), array("c"=>$c4)));
@@ -71,5 +82,11 @@
 	$data=array("cols"=>array($h1, $h2, $h3), "rows"=>$r);
 	$json_data=json_encode($data, JSON_PRETTY_PRINT);
 
-	echo ($json_data);
+	return $json_data;
+}
+
+if (isset($_POST['slot_num']) && isset($_POST['start_time']) && isset($_POST['end_time'])) {
+	echo getCurrentData($_POST['slot_num'], $_POST['start_time'], $_POST['end_time']);
+}
+
 ?>
