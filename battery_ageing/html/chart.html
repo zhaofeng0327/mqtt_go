@@ -1,0 +1,59 @@
+<html>
+  <meta charset="UTF-8">
+
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      //google.charts.setOnLoadCallback(drawChart);
+    </script>
+
+  <style>
+
+.button {
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 15px 32px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+  </style>
+  </head>
+
+  <body>
+
+    <script>
+      function drawVoltage() {
+
+	var jsonData = $.ajax({
+          url: "getData.php",
+          dataType: "json",
+          async: false
+          }).responseText;
+	var data = new google.visualization.DataTable(jsonData);
+
+        var options = {
+          title: '电压',
+          hAxis: {title: '时间',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_voltage'));
+        chart.draw(data, options);
+
+	//chart.draw(data, {width: 400, height: 240});
+
+      }
+    </script>
+
+    <input type="summit" class="button" name="drawchart" value="提交" onclick="drawVoltage()" />
+    <div id="chart_voltage" style="width: 100%; height: 500px;"></div>
+
+  </body>
+</html>
