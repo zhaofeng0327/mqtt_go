@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTML5 Server Side Event Example in Go</title>
+</head>
+<body>
+
+	Yo {{.}}, here are some facinating messages about the
+	current time:<br>
+
+	<script type="text/javascript">
+	    // Create a new HTML5 EventSource
+	    var source = new EventSource('/events/');
+	    // Create a callback for when a new message is received.
+	    source.onmessage = function(e) {
+	        // Append the `data` attribute of the message to the DOM.
+	        document.body.innerHTML += e.data + '<br>';
+	    };
+	</script>
+</body>
+</html>
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>EventSource Demo</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Messages</h1>
+            <div id="messages"></div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SSE test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="app.js"></script>
+    <script type="text/javascript">
+      $(function () {
+        var evsrc = new EventSource("/events")
+        evsrc.onmessage = function (ev) {
+          var data = ev.data
+          $("#log > ul").append("<li>" + data + "</li>")
+        }
+        evsrc.onerror = function (ev) {
+          console.log("readyState = " + ev.currentTarget.readyState)
+        }
+      })
+    </script>
+ </head>
+  <body>
+    <h1>SSE test</h1>
+    <div id="log">
+      <ul>
+      </ul>
+    </div>
+  </body>
+</html>
+--> 
